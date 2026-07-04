@@ -1,0 +1,12 @@
+# Ignore Node dependencies and local environments
+node_modules/
+.env
+.env.*
+*.log
+.git
+.gitignore
+
+# Exclude backend database schemas and configs from the public deployment
+sql/
+supabase/
+scratch/

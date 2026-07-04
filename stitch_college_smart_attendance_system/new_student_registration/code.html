@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Registration - SmartAttend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .soft-bloom {
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.05);
+        }
+        .registration-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: slideIn 0.4s ease-out forwards;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-fixed": "#6ffbbe",
+                "surface-container-high": "#e6e8ea",
+                "on-tertiary-fixed-variant": "#005236",
+                "primary-fixed-dim": "#c3c0ff",
+                "on-secondary": "#ffffff",
+                "surface-variant": "#e0e3e5",
+                "tertiary-fixed-dim": "#4edea3",
+                "primary": "#3525cd",
+                "surface-container": "#eceef0",
+                "on-error": "#ffffff",
+                "tertiary-container": "#006e4b",
+                "surface-bright": "#f7f9fb",
+                "secondary-fixed-dim": "#c0c1ff",
+                "error": "#ba1a1a",
+                "tertiary": "#005338",
+                "on-primary-fixed-variant": "#3323cc",
+                "on-background": "#191c1e",
+                "error-container": "#ffdad6",
+                "secondary-fixed": "#e1e0ff",
+                "on-surface-variant": "#464555",
+                "primary-fixed": "#e2dfff",
+                "surface-container-low": "#f2f4f6",
+                "on-primary": "#ffffff",
+                "surface-tint": "#4d44e3",
+                "on-tertiary": "#ffffff",
+                "on-secondary-fixed-variant": "#2f2ebe",
+                "inverse-surface": "#2d3133",
+                "on-secondary-fixed": "#07006c",
+                "secondary-container": "#6063ee",
+                "surface-container-highest": "#e0e3e5",
+                "secondary": "#4648d4",
+                "on-primary-fixed": "#0f0069",
+                "on-tertiary-fixed": "#002113",
+                "on-primary-container": "#dad7ff",
+                "outline": "#777587",
+                "surface": "#f7f9fb",
+                "primary-container": "#4f46e5",
+                "surface-dim": "#d8dadc",
+                "inverse-on-surface": "#eff1f3",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-container": "#67f4b7",
+                "inverse-primary": "#c3c0ff",
+                "on-error-container": "#93000a",
+                "on-surface": "#191c1e",
+                "background": "#f7f9fb",
+                "on-secondary-container": "#fffbff",
+                "outline-variant": "#c7c4d8"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "md": "16px",
+                "2xl": "48px",
+                "max-width": "1280px",
+                "margin-mobile": "16px",
+                "gutter": "16px",
+                "xl": "32px",
+                "margin-desktop": "32px",
+                "base": "4px",
+                "lg": "24px",
+                "sm": "8px",
+                "xs": "4px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Geist"],
+                "body-lg": ["Inter"],
+                "body-sm": ["Inter"],
+                "label-sm": ["Geist"],
+                "display-lg": ["Geist"],
+                "label-md": ["Geist"],
+                "body-md": ["Inter"],
+                "headline-md": ["Geist"],
+                "headline-lg": ["Geist"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-50 bg-surface shadow-sm">
+<div class="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[32px]" data-icon="school">school</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female academic administrator in a modern university setting. She is wearing a soft grey blazer over a crisp white shirt, looking directly at the camera with a confident and friendly expression. The background is a blurred high-tech campus lobby with indigo and white lighting accents, reflecting a clean academic modernist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGA-CJD40_PXyoaRmyDnISxz8uY5MTuPoCKG-gek44vbhWFkglY1vcOEtqILB0ZDNHaAa1ZdTzmPIwXEMcFdiZ9m9RR4S2BmQxuTjPeN9mbEnJ3USKOnUMnY3DSr_3I1LT4t5nTCnUG_qb-iHhVc2Ct7o-_l57gRQgUMOovCwi8ALJOgeRL3GpYzjbek-vP2FF5OGmlxl_FiXsQ1mJS3arAF6VJiBx1rD5xbVLbdB18zW_r0ih0Ts8-B3sCEd-raaV19eNsfQSK2M"/>
+</div>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center px-margin-mobile py-xl md:py-2xl">
+<div class="w-full max-w-[560px]">
+<!-- Registration Form Card -->
+<div class="bg-surface-container-lowest p-lg md:p-xl rounded-[24px] border border-outline-variant soft-bloom transition-all duration-500" id="registration-card">
+<div class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Student Registration</h1>
+<p class="text-on-surface-variant font-body-md">Enter student details to initialize their academic profile.</p>
+</div>
+<form class="space-y-lg" id="student-form">
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="student-name">Student Name</label>
+<input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="student-name" placeholder="e.g. Julian Martinez" required="" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="mobile-number">Mobile Number</label>
+<input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="mobile-number" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="section">Section</label>
+<select class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md bg-white" id="section" required="">
+<option disabled="" selected="" value="">Select Section</option>
+<option value="A">Section A</option>
+<option value="B">Section B</option>
+<option value="C">Section C</option>
+<option value="D">Section D</option>
+</select>
+</div>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="lecture-hall">Lecture Hall</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="meeting_room">meeting_room</span>
+<input class="w-full h-[48px] pl-[48px] pr-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="lecture-hall" placeholder="e.g. Hall 302 - Engineering Wing" required="" type="text"/>
+</div>
+</div>
+<div class="pt-md">
+<button class="w-full h-[52px] registration-gradient text-white font-label-md text-label-md rounded-full shadow-lg hover:shadow-primary-container/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+<span>Register Student</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="person_add">person_add</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Success State Card (Hidden by default) -->
+<div class="hidden bg-surface-container-lowest p-lg md:p-xl rounded-[24px] border border-outline-variant soft-bloom animate-fade-in text-center" id="success-card">
+<div class="mb-lg flex justify-center">
+<div class="w-20 h-20 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-container text-[40px]" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Registration Successful!</h2>
+<p class="text-on-surface-variant font-body-md mb-xl">The student profile has been created and synced with the campus directory.</p>
+<div class="bg-surface-container-low rounded-2xl p-lg mb-xl border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider mb-xs">Generated Student ID</span>
+<span class="font-display-lg text-display-lg text-primary block" id="display-id">SA-2024-8842</span>
+</div>
+<div class="flex flex-col gap-md">
+<button class="w-full h-[52px] bg-primary text-white font-label-md text-label-md rounded-full active:scale-[0.98] transition-all flex items-center justify-center gap-2" id="btn-attendance">
+<span>Go to Attendance</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="how_to_reg">how_to_reg</span>
+</button>
+<button class="w-full h-[52px] bg-transparent border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-full hover:bg-surface-container transition-all" id="btn-reset">
+                        Register Another Student
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-surface-variant bg-surface-container-lowest">
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 College Smart Attendance System. Academic Modernist Design.</p>
+<div class="flex gap-xl">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">Support</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">System Status</a>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface shadow-[0_-4px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-sm text-label-sm">Classes</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-5 py-2 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<script>
+        const form = document.getElementById('student-form');
+        const regCard = document.getElementById('registration-card');
+        const successCard = document.getElementById('success-card');
+        const displayId = document.getElementById('display-id');
+        const resetBtn = document.getElementById('btn-reset');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Generate a random ID for visual feedback
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            displayId.innerText = `SA-2024-${randomNum}`;
+
+            // Transition UI
+            regCard.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            setTimeout(() => {
+                regCard.classList.add('hidden');
+                successCard.classList.remove('hidden');
+                successCard.classList.add('flex', 'flex-col');
+            }, 300);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            // Reset UI
+            successCard.classList.add('hidden');
+            regCard.classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+            form.reset();
+        });
+
+        // Add focus effects for inputs
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body></html>

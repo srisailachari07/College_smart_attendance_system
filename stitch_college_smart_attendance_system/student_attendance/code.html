@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>SmartAttend - Quick Check-in</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-container-high": "#e6e8ea",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary": "#3525cd",
+                    "surface-container": "#eceef0",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#006e4b",
+                    "surface-bright": "#f7f9fb",
+                    "secondary-fixed-dim": "#c0c1ff",
+                    "error": "#ba1a1a",
+                    "tertiary": "#005338",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#e1e0ff",
+                    "on-surface-variant": "#464555",
+                    "primary-fixed": "#e2dfff",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#2f2ebe",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary-fixed": "#07006c",
+                    "secondary-container": "#6063ee",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary": "#4648d4",
+                    "on-primary-fixed": "#0f0069",
+                    "on-tertiary-fixed": "#002113",
+                    "on-primary-container": "#dad7ff",
+                    "outline": "#777587",
+                    "surface": "#f7f9fb",
+                    "primary-container": "#4f46e5",
+                    "surface-dim": "#d8dadc",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#67f4b7",
+                    "inverse-primary": "#c3c0ff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1e",
+                    "background": "#f7f9fb",
+                    "on-secondary-container": "#fffbff",
+                    "outline-variant": "#c7c4d8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "2xl": "48px",
+                    "max-width": "1280px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "xl": "32px",
+                    "margin-desktop": "32px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "sm": "8px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-sm": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "label-md": ["Geist"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Geist"],
+                    "headline-lg": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .step-transition {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        .hidden-step {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .active-step {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .gradient-btn {
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+        }
+        .soft-bloom {
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="bg-surface shadow-sm flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="school">school</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="help">help</span>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-start pt-12 px-margin-mobile pb-margin-mobile">
+<!-- Step Indicator -->
+<div class="w-full max-w-md flex justify-between mb-8 px-4">
+<div class="flex flex-col items-center gap-1">
+<div class="w-2.5 h-2.5 rounded-full bg-primary transition-colors" id="dot-1"></div>
+<span class="font-label-sm text-label-sm text-primary">Phone</span>
+</div>
+<div class="flex-grow h-[1px] bg-surface-container-highest mt-1.5 mx-2"></div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-2.5 h-2.5 rounded-full bg-surface-variant transition-colors" id="dot-2"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Verify</span>
+</div>
+<div class="flex-grow h-[1px] bg-surface-container-highest mt-1.5 mx-2"></div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-2.5 h-2.5 rounded-full bg-surface-variant transition-colors" id="dot-3"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Code</span>
+</div>
+</div>
+<!-- Step 1: Mobile Number Entry -->
+<section class="active-step step-transition w-full max-w-md flex-col gap-6" id="step-1">
+<div class="text-center">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Welcome Back</h2>
+<p class="font-body-sm text-on-surface-variant">Enter your registered mobile number to continue.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-[24px] border border-outline-variant soft-bloom">
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant px-1" for="phone">Mobile Number</label>
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant material-symbols-outlined" data-icon="phone_iphone">phone_iphone</span>
+<input autocomplete="tel" class="w-full h-12 pl-12 pr-4 bg-surface-bright border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-lg outline-none" id="phone" placeholder="98765 43210" type="tel"/>
+</div>
+</div>
+<button class="gradient-btn w-full h-14 rounded-full text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all" onclick="goToStep(2)">
+                        Check Student Record
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="security">security</span>
+<p class="text-[12px] font-body-sm">Secure biometric-free verification</p>
+</div>
+</section>
+<!-- Step 2: Confirmation -->
+<section class="hidden-step step-transition w-full max-w-md flex-col gap-6" id="step-2">
+<div class="text-center">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Confirm Details</h2>
+<p class="font-body-sm text-on-surface-variant">Verify this is you before entering the code.</p>
+</div>
+<div class="bg-surface-container-lowest overflow-hidden rounded-[24px] border border-outline-variant soft-bloom">
+<div class="h-32 bg-secondary-container/20 flex items-center justify-center relative">
+<img class="w-20 h-20 rounded-full border-4 border-surface-container-lowest object-cover shadow-sm" data-alt="A professional studio portrait of a university student with a warm smile, wearing a clean academic navy blue blazer, captured with soft natural window lighting against a blurred modern campus background. The aesthetic is bright, optimistic, and high-fidelity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh-GJ9OB8oh2S_xpve9t_ENaLJrGPvTl5EEXwXQyg9FAB7XgRhWgj-MySIJhKU95DFJ7v70MuYihVK-X50WnjnXeSDaDz0fjKgZZhaob-d404Udb5ssyZX8xBO2Bpa3lqAH1NgIO4ncJWR9lc8lUmryir3XuQ-mjjFdnbtP-HRlCezENT5w5j0M33QsyxNeCGB_Vj9hIcd1tPWI1GnWjtfXARbjdRk8JJEi6FHbzdS3w7FDDf00FM5VWjE0GZIvkrqT6iCnGBMDnE"/>
+</div>
+<div class="p-6 pt-2">
+<div class="flex flex-col items-center text-center gap-1 mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Alex Johnston</h3>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[12px] font-label-sm uppercase tracking-wider">Active Enrollment</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="p-4 bg-surface-container-low rounded-2xl">
+<span class="font-label-sm text-on-surface-variant block mb-1">Section</span>
+<span class="font-body-md font-semibold text-on-surface">B-12 (CS)</span>
+</div>
+<div class="p-4 bg-surface-container-low rounded-2xl">
+<span class="font-label-sm text-on-surface-variant block mb-1">Lecture Hall</span>
+<span class="font-body-md font-semibold text-on-surface">L-402</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<button class="gradient-btn w-full h-14 rounded-full text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all" onclick="goToStep(3)">
+                            Proceed to Attendance
+                        </button>
+<button class="w-full h-12 rounded-full text-primary font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary/5" onclick="goToStep(1)">
+                            Not me? Change Number
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Step 3: Attendance Code -->
+<section class="hidden-step step-transition w-full max-w-md flex-col gap-6" id="step-3">
+<div class="text-center">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Enter Session Code</h2>
+<p class="font-body-sm text-on-surface-variant">Ask your lecturer for the 4-digit code.</p>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-[24px] border border-outline-variant soft-bloom">
+<div class="flex flex-col gap-8">
+<div class="flex justify-center gap-3">
+<input autofocus="" class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text"/>
+<input class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text"/>
+<input class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text"/>
+<input class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text"/>
+</div>
+<button class="gradient-btn w-full h-20 rounded-[24px] text-on-primary font-headline-md text-headline-md flex items-center justify-center gap-3 active:scale-[0.95] transition-all shadow-lg shadow-primary/20" onclick="completeAttendance()">
+<span class="material-symbols-outlined text-[32px]" data-icon="task_alt">task_alt</span>
+                        SUBMIT ATTENDANCE
+                    </button>
+</div>
+</div>
+<div class="text-center">
+<p class="font-body-sm text-on-surface-variant flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="timer">timer</span>
+                    Session expires in 04:32
+                </p>
+</div>
+</section>
+<!-- Success Screen (Hidden initially) -->
+<section class="hidden-step step-transition w-full max-w-md flex-col gap-6 items-center text-center" id="step-success">
+<div class="w-24 h-24 bg-tertiary-container rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[48px] text-on-tertiary-container" data-icon="check_circle">check_circle</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Marked Present!</h2>
+<p class="font-body-lg text-on-surface-variant max-w-[280px]">Your attendance for <span class="font-bold text-on-surface">Advanced Algorithms</span> has been recorded.</p>
+<div class="w-full mt-6 p-4 bg-surface-container-high rounded-2xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+<p class="text-left font-body-sm text-on-surface-variant">A confirmation email has been sent to your student ID.</p>
+</div>
+<button class="mt-8 text-primary font-label-md text-label-md flex items-center gap-2" onclick="location.reload()">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+                Back to Home
+            </button>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-surface-variant mt-auto">
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">
+            © 2024 College Smart Attendance System. Academic Modernist Design.
+        </p>
+<div class="flex gap-6">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">Support</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">System Status</a>
+</div>
+</footer>
+<script>
+        function goToStep(stepNumber) {
+            // Hide all steps
+            const steps = ['step-1', 'step-2', 'step-3', 'step-success'];
+            steps.forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.remove('active-step');
+                el.classList.add('hidden-step');
+            });
+
+            // Show target step
+            const activeStep = document.getElementById(`step-${stepNumber}`);
+            if (activeStep) {
+                activeStep.classList.remove('hidden-step');
+                activeStep.classList.add('active-step');
+                
+                // Update indicator
+                updateIndicators(stepNumber);
+
+                // Focus first input if step 3
+                if (stepNumber === 3) {
+                    setTimeout(() => {
+                        document.querySelector('.code-input').focus();
+                    }, 400);
+                }
+            }
+        }
+
+        function updateIndicators(activeStepNum) {
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (!dot) continue;
+                
+                if (i < activeStepNum) {
+                    dot.classList.remove('bg-surface-variant', 'bg-primary');
+                    dot.classList.add('bg-tertiary');
+                } else if (i === activeStepNum) {
+                    dot.classList.remove('bg-surface-variant', 'bg-tertiary');
+                    dot.classList.add('bg-primary');
+                } else {
+                    dot.classList.remove('bg-primary', 'bg-tertiary');
+                    dot.classList.add('bg-surface-variant');
+                }
+            }
+        }
+
+        function completeAttendance() {
+            // Simulate API call
+            const btn = event.currentTarget;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> VERIFYING...`;
+            
+            setTimeout(() => {
+                goToStep('success');
+            }, 1200);
+        }
+
+        // Auto-advance for code inputs
+        document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Initialize Material Icons Transcription Logic
+        document.querySelectorAll('[data-icon]').forEach(el => {
+            const iconName = el.getAttribute('data-icon');
+            const span = document.createElement('span');
+            span.className = 'material-symbols-outlined';
+            span.textContent = iconName;
+            
+            // Mirror classes from the parent if they are icon-specific
+            const parentClasses = el.className;
+            if (parentClasses.includes('text-')) {
+                const colorClasses = parentClasses.split(' ').filter(c => c.startsWith('text-'));
+                span.classList.add(...colorClasses);
+            }
+            
+            // If the element is just a placeholder, replace it. 
+            // If it's a wrapper (like the buttons), append it.
+            if (el.tagName === 'SPAN' && el.classList.contains('material-symbols-outlined')) {
+                // Already processed or correctly formatted
+            } else if (el.innerHTML.trim() === '') {
+                el.appendChild(span);
+            }
+        });
+    </script>
+</body></html>

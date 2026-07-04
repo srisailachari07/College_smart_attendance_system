@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+  <title>SmartAttend | Student Attendance</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "md": "16px",
+            "2xl": "48px",
+            "max-width": "1280px",
+            "margin-mobile": "16px",
+            "gutter": "16px",
+            "xl": "32px",
+            "margin-desktop": "32px",
+            "base": "4px",
+            "lg": "24px",
+            "sm": "8px",
+            "xs": "4px"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Geist"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-sm": ["Geist"],
+            "display-lg": ["Geist"],
+            "label-md": ["Geist"],
+            "body-md": ["Inter"],
+            "headline-md": ["Geist"],
+            "headline-lg": ["Geist"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+          }
+        },
+      }
+    }
+  </script>
+  <style>
+    .step-transition {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    }
+    .hidden-step {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .active-step {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+
+  <!-- Student Portal Navigation -->
+  <header class="bg-surface shadow-sm sticky top-0 z-50">
+    <div class="max-w-max-width mx-auto flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-4 gap-4">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='/student/index.html'">
+        <span class="material-symbols-outlined text-primary text-[32px]">school</span>
+        <h1 class="font-headline-md text-headline-md font-bold text-primary" id="header-college-name">SmartAttend</h1>
+    </div>
+  </header>
+
+  <main class="flex-grow flex flex-col items-center justify-start pt-12 px-margin-mobile pb-margin-mobile">
+    
+    <!-- Step Indicator -->
+    <div class="w-full max-w-md flex justify-between mb-8 px-4" id="step-indicators-container">
+      <div class="flex flex-col items-center gap-1">
+        <div class="w-2.5 h-2.5 rounded-full bg-primary transition-colors" id="dot-1"></div>
+        <span class="font-label-sm text-label-sm text-primary">Roll Number</span>
+      </div>
+      <div class="flex-grow h-[1px] bg-surface-container-highest mt-1.5 mx-2"></div>
+      <div class="flex flex-col items-center gap-1">
+        <div class="w-2.5 h-2.5 rounded-full bg-surface-variant transition-colors" id="dot-2"></div>
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Verify</span>
+      </div>
+      <div class="flex-grow h-[1px] bg-surface-container-highest mt-1.5 mx-2"></div>
+      <div class="flex flex-col items-center gap-1">
+        <div class="w-2.5 h-2.5 rounded-full bg-surface-variant transition-colors" id="dot-3"></div>
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Code</span>
+      </div>
+    </div>
+
+    <!-- Step 1: University Roll Number Entry -->
+    <section class="active-step step-transition w-full max-w-md flex-col gap-6" id="step-1">
+      <div class="text-center">
+        <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Welcome Back</h2>
+        <p class="font-body-sm text-on-surface-variant">Enter your official University Roll Number to continue.</p>
+      </div>
+      <div class="bg-surface-container-lowest p-6 rounded-[24px] border border-outline-variant soft-bloom">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2">
+            <label class="font-label-md text-label-md text-on-surface-variant px-1" for="student-id-input">University Roll Number</label>
+            <div class="relative group">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant material-symbols-outlined">badge</span>
+              <input autocomplete="off" class="w-full h-12 pl-12 pr-4 bg-surface-bright border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-lg outline-none uppercase" id="student-id-input" placeholder="e.g. 23CS001" type="text"/>
+            </div>
+            <span class="text-xs text-error hidden" id="error-step1">Roll Number not registered. Please contact the administrator.</span>
+          </div>
+          <button id="btn-check-record" class="gradient-btn w-full h-14 rounded-full text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all">
+            <span>Check Student Record</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center justify-center gap-2 text-on-surface-variant">
+        <span class="material-symbols-outlined text-[18px]">security</span>
+        <p class="text-[12px] font-body-sm">Secure verification system</p>
+      </div>
+    </section>
+
+    <!-- Step 2: Confirmation -->
+    <section class="hidden-step step-transition w-full max-w-md flex-col gap-6" id="step-2">
+      <div class="text-center">
+        <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Confirm Details</h2>
+        <p class="font-body-sm text-on-surface-variant">Verify this is you before entering the code.</p>
+      </div>
+      <div class="bg-surface-container-lowest overflow-hidden rounded-[24px] border border-outline-variant soft-bloom">
+        <!-- Accent Header -->
+        <div class="h-24 bg-secondary-container/20 flex items-center justify-center relative">
+          <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border-2 border-surface-container-lowest shadow-sm">
+            <span class="material-symbols-outlined text-primary text-[28px]">person</span>
+          </div>
+        </div>
+        <div class="p-6 pt-2">
+          <!-- Name + Status -->
+          <div class="flex flex-col items-center text-center gap-1 mb-6">
+            <h3 class="font-headline-md text-headline-md text-on-surface" id="student-name-display">Student Name</h3>
+            <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[12px] font-label-sm uppercase tracking-wider">Verified Profile</span>
+          </div>
+          <!-- Info Details -->
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="p-4 bg-surface-container-low rounded-2xl flex flex-col items-center justify-center">
+              <span class="font-label-sm text-on-surface-variant block mb-1 flex items-center justify-center">Roll Number</span>
+              <span class="font-body-md font-mono font-bold text-on-surface" id="student-id-display">23CS001</span>
+            </div>
+            <div class="p-4 bg-surface-container-low rounded-2xl flex flex-col items-center justify-center">
+              <span class="font-label-sm text-on-surface-variant block mb-1">Lecture Hall</span>
+              <span class="font-body-lg font-bold text-primary" id="student-hall-display">LH-01</span>
+            </div>
+          </div>
+          <!-- Buttons -->
+          <div class="flex flex-col gap-3">
+            <button id="btn-confirm-proceed" class="gradient-btn w-full h-14 rounded-full text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+              <span>This Is Me, Proceed</span>
+            </button>
+            <button id="btn-change-number" class="w-full h-12 rounded-full text-primary font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary/5">
+              <span>Not me? Change ID</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: Attendance Code -->
+    <section class="hidden-step step-transition w-full max-w-md flex-col gap-6" id="step-3">
+      <div class="text-center">
+        <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Enter Session Code</h2>
+        <p class="font-body-sm text-on-surface-variant">Ask your lecturer for the 4-digit code.</p>
+      </div>
+      <div class="bg-surface-container-lowest p-8 rounded-[24px] border border-outline-variant soft-bloom">
+        <div class="flex flex-col gap-8">
+          <!-- OTP-style 4 inputs -->
+          <div class="flex justify-center gap-3">
+            <input autofocus class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text" pattern="[0-9]*" inputmode="numeric"/>
+            <input class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text" pattern="[0-9]*" inputmode="numeric"/>
+            <input class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text" pattern="[0-9]*" inputmode="numeric"/>
+            <input class="code-input w-14 h-16 text-center text-3xl font-bold bg-surface-bright border-2 border-outline-variant rounded-2xl focus:border-primary focus:ring-0 transition-colors" maxlength="1" type="text" pattern="[0-9]*" inputmode="numeric"/>
+          </div>
+          <button id="btn-submit-attendance" class="gradient-btn w-full h-20 rounded-[24px] text-on-primary font-headline-md text-headline-md flex items-center justify-center gap-3 active:scale-[0.95] transition-all shadow-lg shadow-primary/20">
+            <span class="material-symbols-outlined text-[32px]">task_alt</span>
+            <span>SUBMIT ATTENDANCE</span>
+          </button>
+        </div>
+      </div>
+      <div class="text-center hidden" id="timer-display-container">
+        <!-- Display countdown timer if active (informational only) -->
+        <p class="font-body-sm text-on-surface-variant flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">timer</span>
+          <span id="countdown-timer-text">Session active</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Success Screen (Adjustment 4 Success Fields) -->
+    <section class="hidden-step step-transition w-full max-w-md flex-col gap-6 items-center text-center" id="step-success">
+      <div class="w-24 h-24 bg-tertiary-container/10 rounded-full flex items-center justify-center mb-4 animate-bounce">
+        <span class="material-symbols-outlined text-[48px] text-tertiary">check_circle</span>
+      </div>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface">✅ Attendance Successfully Recorded</h2>
+      <p class="font-body-lg text-on-surface-variant max-w-[340px]" id="success-notice">Your attendance has been successfully recorded.</p>
+      
+      <!-- Detailed Success Fields -->
+      <div class="w-full bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant text-left space-y-3 soft-bloom">
+        <div class="flex justify-between border-b border-surface-variant pb-2">
+          <span class="font-label-sm text-on-surface-variant">Student Name</span>
+          <span class="font-body-md font-semibold text-on-surface" id="success-name">Ravi Kumar</span>
+        </div>
+        <div class="flex justify-between border-b border-surface-variant pb-2">
+          <span class="font-label-sm text-on-surface-variant">University Roll Number</span>
+          <span class="font-body-md font-semibold text-primary font-mono" id="success-student-id">23CS001</span>
+        </div>
+        <div class="flex justify-between border-b border-surface-variant pb-2">
+          <span class="font-label-sm text-on-surface-variant">Lecture Hall</span>
+          <span class="font-body-md font-semibold text-on-surface" id="success-hall">LH-03</span>
+        </div>
+        <div class="flex justify-between border-b border-surface-variant pb-2">
+          <span class="font-label-sm text-on-surface-variant">Session</span>
+          <span class="font-body-md font-semibold text-on-surface" id="success-session">S2</span>
+        </div>
+        <div class="flex justify-between border-b border-surface-variant pb-2">
+          <span class="font-label-sm text-on-surface-variant">Date</span>
+          <span class="font-body-md font-semibold text-on-surface" id="success-date">02 July 2026</span>
+        </div>
+        <div class="flex justify-between border-b border-surface-variant pb-2">
+          <span class="font-label-sm text-on-surface-variant">Time</span>
+          <span class="font-body-md font-semibold text-on-surface" id="success-time">09:13:42 AM</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="font-label-sm text-on-surface-variant">Status</span>
+          <span class="font-body-md font-semibold text-tertiary">Present</span>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-surface-variant mt-auto">
+    <p class="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left" id="footer-text">
+      © 2026 College Smart Attendance System. Academic Modernist Design.
+    </p>
+    <div class="flex gap-6">
+      <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">Support</a>
+      <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">System Status</a>
+    </div>
+  </footer>
+
+  <!-- Required scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script type="module">
+    import { api } from '/js/api.js';
+    import { getStudentByRollNumber } from '/js/students.js';
+    import { markAttendance } from '/js/attendance.js';
+    import { getSetting, formatDate, formatTime } from '/js/utils.js';
+
+    // Page state variables
+    let currentStudent = null;
+
+    // Elements
+    const inputStudentId = document.getElementById('student-id-input');
+    const btnCheckRecord = document.getElementById('btn-check-record');
+    const errorStep1 = document.getElementById('error-step1');
+
+    const displayName = document.getElementById('student-name-display');
+    const displayHall = document.getElementById('student-hall-display');
+    const btnConfirm = document.getElementById('btn-confirm-proceed');
+    const btnChangeNum = document.getElementById('btn-change-number');
+
+    const codeInputs = document.querySelectorAll('.code-input');
+    const btnSubmitAttendance = document.getElementById('btn-submit-attendance');
+
+    const successName = document.getElementById('success-name');
+    const successStudentId = document.getElementById('success-student-id');
+    const successHall = document.getElementById('success-hall');
+    const successSession = document.getElementById('success-session');
+    const successDate = document.getElementById('success-date');
+    const successTime = document.getElementById('success-time');
+
+    const stepIndicatorContainer = document.getElementById('step-indicators-container');
+
+    // Dynamic settings loading
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          document.getElementById('header-college-name').textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}. Academic Modernist Design.`;
+        }
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+    loadSettings();
+
+    // Browser Fingerprint Generator (Canvas + Hardware attributes)
+    async function generateDeviceFingerprint() {
+      try {
+        const components = [
+          navigator.userAgent,
+          screen.width + "x" + screen.height + "x" + screen.colorDepth,
+          navigator.language,
+          new Date().getTimezoneOffset(),
+          navigator.hardwareConcurrency || 'N/A',
+          navigator.deviceMemory || 'N/A'
+        ];
+        
+        // Canvas Fingerprint
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          canvas.width = 200;
+          canvas.height = 50;
+          ctx.textBaseline = "top";
+          ctx.font = "14px 'Geist'";
+          ctx.textBaseline = "alphabetic";
+          ctx.fillStyle = "#f60";
+          ctx.fillRect(125,1,62,20);
+          ctx.fillStyle = "#069";
+          ctx.fillText("SmartAttend, v2.0", 2, 15);
+          ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+          ctx.fillText("SmartAttend, v2.0", 4, 17);
+          components.push(canvas.toDataURL());
+        }
+        
+        const rawString = components.join('|');
+        const msgBuffer = new TextEncoder().encode(rawString);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const deviceHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return deviceHash;
+      } catch (err) {
+        console.error('Device fingerprint generation error:', err);
+        return 'FALLBACK_FINGERPRINT_HASH_830EF';
+      }
+    }
+
+    // Check query params for auto-fill redirect
+    function checkUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const roll = urlParams.get('rollNumber') || urlParams.get('roll') || urlParams.get('id');
+      if (roll) {
+        inputStudentId.value = roll;
+        checkStudentRecord(roll);
+      }
+    }
+
+    // Step navigation controller
+    function goToStep(stepNumber) {
+      const steps = ['1', '2', '3', 'success'];
+      steps.forEach(num => {
+        const el = document.getElementById(`step-${num}`);
+        el.classList.remove('active-step');
+        el.classList.add('hidden-step');
+      });
+
+      const activeStep = document.getElementById(`step-${stepNumber}`);
+      if (activeStep) {
+        activeStep.classList.remove('hidden-step');
+        activeStep.classList.add('active-step');
+        
+        // Update indicators
+        updateIndicators(stepNumber);
+
+        // Autofocus first digit in step 3
+        if (stepNumber === '3') {
+          setTimeout(() => {
+            codeInputs[0].focus();
+          }, 300);
+        }
+      }
+    }
+
+    function updateIndicators(activeStep) {
+      if (activeStep === 'success') {
+        stepIndicatorContainer.classList.add('hidden');
+        return;
+      }
+      stepIndicatorContainer.classList.remove('hidden');
+
+      const stepNum = parseInt(activeStep);
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (!dot) continue;
+        
+        if (i < stepNum) {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-tertiary transition-colors';
+        } else if (i === stepNum) {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-primary transition-colors';
+        } else {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-surface-variant transition-colors';
+        }
+      }
+    }
+
+    // Lookup Student and Validate Active Session Locks
+    async function checkStudentRecord(rollNumber) {
+      errorStep1.classList.add('hidden');
+      
+      const cleanId = rollNumber.trim().toUpperCase();
+      if (!cleanId || cleanId.length < 2) {
+        errorStep1.innerText = 'Please enter a valid University Roll Number.';
+        errorStep1.classList.remove('hidden');
+        return;
+      }
+
+      window.utils.setLoading(btnCheckRecord, true, 'Searching...');
+      
+      try {
+        let student;
+        try {
+          student = await getStudentByRollNumber(cleanId);
+        } catch (apiErr) {
+          window.utils.setLoading(btnCheckRecord, false);
+          errorStep1.innerText = 'Lookup failed: ' + (apiErr.message || 'Database error. Please try again.');
+          errorStep1.classList.remove('hidden');
+          return;
+        }
+
+        if (!student) {
+          window.utils.setLoading(btnCheckRecord, false);
+          errorStep1.innerText = 'Roll Number not registered. Please contact the administrator.';
+          errorStep1.classList.remove('hidden');
+          return;
+        }
+
+        if (!student.is_active) {
+          window.utils.setLoading(btnCheckRecord, false);
+          errorStep1.innerText = 'Student account is inactive. Please contact the administrator.';
+          errorStep1.classList.remove('hidden');
+          return;
+        }
+
+        // Check active session for their lecture hall
+        const { data: activeSession, error: sessionError } = await api.Sessions.findActive(student.lecture_hall);
+        
+        if (sessionError || !activeSession) {
+          window.utils.setLoading(btnCheckRecord, false);
+          errorStep1.innerText = 'No active attendance session for your lecture hall right now.';
+          errorStep1.classList.remove('hidden');
+          return;
+        }
+
+        // Database-enforced session lock verification
+        const { data: alreadyMarked, error: recordError } = await api.Records.findDuplicate(student.id, activeSession.id);
+        
+        if (alreadyMarked) {
+          window.utils.setLoading(btnCheckRecord, false);
+          
+          // Set local lock for UX speedups
+          localStorage.setItem(`marked_session_${student.roll_number}`, activeSession.id);
+
+          // Get exact check-in time
+          const { data: checkInDetails } = await api.Records.byStudent(student.id);
+          let markedTime = new Date();
+          if (checkInDetails && checkInDetails.length > 0) {
+            const matching = checkInDetails.find(r => r.session_id === activeSession.id);
+            if (matching) markedTime = new Date(matching.marked_at);
+          }
+
+          successName.textContent = student.student_name;
+          successStudentId.textContent = student.roll_number;
+          successHall.textContent = student.lecture_hall;
+          successSession.textContent = activeSession.session_label;
+          successDate.textContent = formatDate(activeSession.session_date);
+          successTime.textContent = formatTime(markedTime);
+
+          const successNotice = document.getElementById('success-notice');
+          if (successNotice) {
+            successNotice.textContent = "Your attendance has already been recorded for this session. Please wait until your instructor starts the next attendance session.";
+          }
+
+          goToStep('success');
+          return;
+        }
+
+        window.utils.setLoading(btnCheckRecord, false);
+
+        // Proceed to step 2 details verification
+        currentStudent = student;
+        displayName.textContent = student.student_name;
+        document.getElementById('student-id-display').textContent = student.roll_number;
+        displayHall.textContent = student.lecture_hall;
+        goToStep('2');
+        
+      } catch (err) {
+        window.utils.setLoading(btnCheckRecord, false);
+        console.error(err);
+        errorStep1.innerText = 'Unable to connect to the server. Please try again.';
+        errorStep1.classList.remove('hidden');
+      }
+    }
+
+    // Step 1 check button click
+    btnCheckRecord.addEventListener('click', () => {
+      checkStudentRecord(inputStudentId.value.trim());
+    });
+
+    // Step 1 enter key submit
+    inputStudentId.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        checkStudentRecord(inputStudentId.value.trim());
+      }
+    });
+
+    // Step 2 Confirm button
+    btnConfirm.addEventListener('click', () => {
+      goToStep('3');
+    });
+
+    // Step 2 Go back button
+    btnChangeNum.addEventListener('click', () => {
+      currentStudent = null;
+      if (window.location.search) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      goToStep('1');
+    });
+
+    // OTP Code Auto-Advance & backspace control
+    codeInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
+        
+        if (val.length === 1 && index < codeInputs.length - 1) {
+          codeInputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
+          codeInputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const pastedData = clipboardData.getData('Text').replace(/\D/g, '').substring(0, 4);
+        
+        if (pastedData.length > 0) {
+          codeInputs.forEach((el, idx) => {
+            el.value = pastedData[idx] || '';
+          });
+          const focusIndex = Math.min(pastedData.length, codeInputs.length - 1);
+          codeInputs[focusIndex].focus();
+        }
+      });
+    });
+
+    // Step 3 submit button click
+    async function submitAttendanceCode() {
+      let code = '';
+      codeInputs.forEach(input => code += input.value);
+
+      if (code.length < 4) {
+        window.utils.showError('Please enter all 4 digits of the code.');
+        return;
+      }
+
+      window.utils.setLoading(btnSubmitAttendance, true, 'Verifying...');
+
+      try {
+        const rollNumber = currentStudent.roll_number;
+        const deviceHash = await generateDeviceFingerprint();
+        const result = await markAttendance(rollNumber, code, deviceHash);
+
+        // Success! Hide loader and render Step success
+        window.utils.setLoading(btnSubmitAttendance, false);
+        window.utils.showSuccess('Attendance marked successfully!');
+
+        // Save local lock key for local fast-path check
+        if (result.session_id) {
+          localStorage.setItem(`marked_session_${result.roll_number}`, result.session_id);
+        }
+
+        // Render success details
+        successName.textContent = result.student_name;
+        successStudentId.textContent = result.roll_number;
+        successHall.textContent = result.lecture_hall;
+        successSession.textContent = result.session_label;
+        successDate.textContent = formatDate(result.marked_at);
+        successTime.textContent = formatTime(result.marked_at);
+
+        const successNotice = document.getElementById('success-notice');
+        if (successNotice) {
+          successNotice.textContent = "Your attendance has been successfully recorded.";
+        }
+
+        goToStep('success');
+
+      } catch (err) {
+        window.utils.setLoading(btnSubmitAttendance, false);
+        window.utils.showError(err.message);
+        codeInputs.forEach(input => input.value = '');
+        codeInputs[0].focus();
+      }
+    }
+
+    btnSubmitAttendance.addEventListener('click', submitAttendanceCode);
+
+    // Initial check
+    checkUrlParams();
+  </script>
+</body>
+</html>

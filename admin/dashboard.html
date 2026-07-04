@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Admin Dashboard | SmartAttend</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "24": "24px",
+            "full": "9999px"
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col lg:flex-row">
+
+  <!-- Route Guard Check -->
+  <script type="module">
+    import { guardRoute } from '/js/auth.js';
+    guardRoute(['admin']);
+  </script>
+
+  <!-- Navigation Drawer (Desktop Sidebar) -->
+  <aside class="hidden lg:flex flex-col h-screen w-[280px] fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant py-6 z-40">
+    <div class="px-6 mb-8 flex items-center gap-3 cursor-pointer" onclick="window.location.href='/admin/dashboard.html'">
+      <span class="material-symbols-outlined text-primary text-3xl">school</span>
+      <h1 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h1>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <!-- Dashboard -->
+      <a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-full px-4 py-3 mx-2 relative sidebar-active-indicator transition-all duration-200" href="/admin/dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <!-- Student Directory -->
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/students.html">
+        <span class="material-symbols-outlined">group</span>
+        <span class="font-label-md text-label-md">Students</span>
+      </a>
+      <!-- Faculty Management -->
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/faculty.html">
+        <span class="material-symbols-outlined">supervisor_account</span>
+        <span class="font-label-md text-label-md">Faculty</span>
+      </a>
+      <!-- Attendance Monitor -->
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/attendance.html">
+        <span class="material-symbols-outlined">sensors</span>
+        <span class="font-label-md text-label-md">Attendance</span>
+      </a>
+      <!-- Reports -->
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/reports.html">
+        <span class="material-symbols-outlined">assessment</span>
+        <span class="font-label-md text-label-md">Reports</span>
+      </a>
+      <!-- System Settings -->
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/settings.html">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+    </nav>
+    <div class="mt-auto px-4">
+      <div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-24">
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <p class="font-label-md text-on-surface truncate" id="admin-name">Administrator</p>
+          <p class="text-xs text-on-surface-variant truncate" id="admin-email">admin@college.edu</p>
+        </div>
+      </div>
+      <button id="btn-logout" class="w-full mt-4 py-3 border border-outline-variant text-error rounded-xl font-label-md text-label-md hover:bg-error-container/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Page Content Wrapper -->
+  <div class="flex-grow flex flex-col min-w-0 lg:pl-[280px]">
+    <!-- Top AppBar (Mobile/Tablet and Top Navigation Content) -->
+    <header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-30 bg-surface shadow-sm">
+      <div class="flex items-center gap-2 lg:hidden" onclick="window.location.href='/admin/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-headline-md">school</span>
+        <span class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</span>
+      </div>
+      <div class="hidden lg:block">
+        <h2 class="font-headline-md text-headline-md text-on-surface" id="college-name-header">Dashboard Overview</h2>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="lg:hidden">
+          <button id="btn-logout-mobile" class="material-symbols-outlined p-2 text-error hover:bg-error-container/10 rounded-full">logout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow p-margin-mobile md:p-margin-desktop pb-24 bg-background overflow-x-hidden gap-lg flex flex-col animate-fade-in">
+      
+      <!-- Welcome Hero -->
+      <section class="relative rounded-24 overflow-hidden p-8 text-white min-h-[160px] flex flex-col justify-center bg-gradient-to-r from-primary to-secondary-container soft-bloom">
+        <div class="relative z-10">
+          <h3 class="font-headline-lg text-headline-lg mb-2">Welcome back, Admin</h3>
+          <p class="font-body-md text-on-primary-container/85 max-w-lg">Manage faculty reassignments, student registries, and fetch institution attendance details.</p>
+        </div>
+      </section>
+
+      <!-- Stats Grid (Bento Style) -->
+      <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+        <!-- Total Students -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-primary/10 rounded-xl">
+              <span class="material-symbols-outlined text-primary">group</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Total Students</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-total-students">0</h4>
+          </div>
+        </div>
+        
+        <!-- Active Sessions -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4" onclick="window.location.href='/admin/attendance.html'" style="cursor: pointer;">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-secondary/10 rounded-xl">
+              <span class="material-symbols-outlined text-secondary">sensors</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              <span class="text-[10px] font-semibold text-green-600 uppercase tracking-wider">Live</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Active Sessions</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-active-sessions">0</h4>
+          </div>
+        </div>
+        
+        <!-- Today's Count -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-tertiary-container/10 rounded-xl">
+              <span class="material-symbols-outlined text-tertiary">calendar_today</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Today's Presence</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-today-records">0</h4>
+          </div>
+        </div>
+        
+        <!-- Faculty Count -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-error/10 rounded-xl">
+              <span class="material-symbols-outlined text-error">person_pin</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Active Faculty</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-active-faculty">0</h4>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bento Grid Navigation Controls -->
+      <section class="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
+        <!-- Quick Actions Bento -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col">
+          <h5 class="font-headline-md text-on-surface mb-6">Console Quick Links</h5>
+          <div class="grid grid-cols-2 gap-4 flex-grow">
+            <button class="flex flex-col items-center justify-center p-4 bg-surface-bright border border-outline-variant rounded-2xl hover:bg-primary-container hover:text-on-primary-container transition-all group active:scale-95" onclick="window.location.href='/admin/students.html'">
+              <span class="material-symbols-outlined text-primary mb-2 group-hover:text-on-primary-container">group</span>
+              <span class="text-xs font-semibold">Students</span>
+            </button>
+            <button class="flex flex-col items-center justify-center p-4 bg-surface-bright border border-outline-variant rounded-2xl hover:bg-primary-container hover:text-on-primary-container transition-all group active:scale-95" onclick="window.location.href='/admin/faculty.html'">
+              <span class="material-symbols-outlined text-primary mb-2 group-hover:text-on-primary-container">supervisor_account</span>
+              <span class="text-xs font-semibold">Faculty</span>
+            </button>
+            <button class="flex flex-col items-center justify-center p-4 bg-surface-bright border border-outline-variant rounded-2xl hover:bg-primary-container hover:text-on-primary-container transition-all group active:scale-95" onclick="window.location.href='/admin/attendance.html'">
+              <span class="material-symbols-outlined text-primary mb-2 group-hover:text-on-primary-container">sensors</span>
+              <span class="text-xs font-semibold">Attendance Monitor</span>
+            </button>
+            <button class="flex flex-col items-center justify-center p-4 bg-surface-bright border border-outline-variant rounded-2xl hover:bg-primary-container hover:text-on-primary-container transition-all group active:scale-95" onclick="window.location.href='/admin/reports.html'">
+              <span class="material-symbols-outlined text-primary mb-2 group-hover:text-on-primary-container">assessment</span>
+              <span class="text-xs font-semibold">System Reports</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Today's Attendance details -->
+        <div class="xl:col-span-2 bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant">
+          <div class="flex justify-between items-center mb-6 border-b border-surface-variant pb-3">
+            <h5 class="font-headline-md text-on-surface">Today's Attendance Summary</h5>
+            <span class="text-xs bg-surface px-2.5 py-1 rounded-full font-label-sm border" id="date-badge">Today</span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-lg h-full items-center">
+            <!-- Present KPI -->
+            <div class="p-6 bg-tertiary-container/10 border border-tertiary-container/20 rounded-2xl flex flex-col items-center text-center">
+              <span class="material-symbols-outlined text-[32px] text-tertiary mb-2">check_circle</span>
+              <span class="font-label-sm text-on-surface-variant uppercase tracking-wider block mb-1">Present Today</span>
+              <h4 class="text-4xl font-bold text-tertiary" id="summary-present">0</h4>
+            </div>
+
+            <!-- Absent KPI -->
+            <div class="p-6 bg-error-container/10 border border-error-container/20 rounded-2xl flex flex-col items-center text-center">
+              <span class="material-symbols-outlined text-[32px] text-error mb-2">cancel</span>
+              <span class="font-label-sm text-on-surface-variant uppercase tracking-wider block mb-1">Absent Today</span>
+              <h4 class="text-4xl font-bold text-error" id="summary-absent">0</h4>
+            </div>
+
+            <!-- Total Checked In -->
+            <div class="p-6 bg-primary/5 border border-primary/10 rounded-2xl flex flex-col items-center text-center">
+              <span class="material-symbols-outlined text-[32px] text-primary mb-2">fact_check</span>
+              <span class="font-label-sm text-on-surface-variant uppercase tracking-wider block mb-1">Total Roll Call</span>
+              <h4 class="text-4xl font-bold text-primary" id="summary-total">0</h4>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Component -->
+    <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest border-t border-surface-variant">
+      <p class="font-body-sm text-secondary text-sm" id="footer-text">© 2026 College Smart Attendance System. Academic Modernist Design.</p>
+      <div class="flex gap-6">
+        <a class="text-on-surface-variant hover:text-primary transition-opacity text-sm underline decoration-transparent hover:decoration-current" href="#">Support</a>
+        <a class="text-on-surface-variant hover:text-primary transition-opacity text-sm underline decoration-transparent hover:decoration-current" href="#">System Status</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/js/components.js"></script>
+  
+  <script type="module">
+    import { api } from '/js/api.js';
+    import { getCurrentUser, logout } from '/js/auth.js';
+    import { getSetting } from '/js/utils.js';
+
+    const headerCollegeName = document.getElementById('college-name-header');
+    const adminName = document.getElementById('admin-name');
+    const adminEmail = document.getElementById('admin-email');
+
+    // Stats KPIs
+    const statStudents = document.getElementById('stat-total-students');
+    const statSessions = document.getElementById('stat-active-sessions');
+    const statRecords = document.getElementById('stat-today-records');
+    const statFaculty = document.getElementById('stat-active-faculty');
+
+    // Detailed Summary
+    const summaryPresent = document.getElementById('summary-present');
+    const summaryAbsent = document.getElementById('summary-absent');
+    const summaryTotal = document.getElementById('summary-total');
+
+    // Load dynamic setting details
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          headerCollegeName.textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}. Academic Modernist Design.`;
+        }
+      } catch (err) {
+        console.error('Settings loading error:', err);
+      }
+    }
+    loadSettings();
+
+    // Logout Click
+    function handleLogout() {
+      window.components.confirmDialog({
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out from the admin console?',
+        confirmLabel: 'Sign Out',
+        cancelLabel: 'Cancel'
+      }).then((result) => {
+        if (result) logout();
+      });
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
+    document.getElementById('btn-logout-mobile').addEventListener('click', handleLogout);
+
+    /**
+     * Initializes stats widgets and active logs.
+     */
+    async function initDashboard() {
+      try {
+        const user = await getCurrentUser();
+        if (user) {
+          adminName.textContent = user.name;
+          adminEmail.textContent = user.email;
+        }
+
+        // Fetch DB-computed admin dashboard stats in a single secure RPC call
+        window.utils.showLoader('Loading dashboard stats...');
+        const { data: stats, error } = await api.RPC.getAdminDashboardStats();
+        window.utils.hideLoader();
+
+        if (error) throw error;
+
+        if (stats) {
+          statStudents.textContent = stats.total_students || '0';
+          statSessions.textContent = stats.active_sessions || '0';
+          statFaculty.textContent = stats.total_faculty || '0';
+          statRecords.textContent = stats.total_today || '0';
+
+          summaryPresent.textContent = stats.present_today || '0';
+          summaryAbsent.textContent = stats.absent_today || '0';
+          summaryTotal.textContent = stats.total_today || '0';
+        }
+
+      } catch (err) {
+        window.utils.hideLoader();
+        console.error('Error loading admin stats:', err);
+      }
+    }
+
+    // Run
+    initDashboard();
+  </script>
+</body>
+</html>

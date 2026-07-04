@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SmartAttend | Bulk Student Import</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- SheetJS (XLSX Parser) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary": "#3525cd",
+            "surface": "#f7f9fb",
+            "outline": "#777587",
+            "outline-variant": "#c7c4d8",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-primary": "#ffffff",
+            "tertiary": "#005338",
+            "tertiary-container": "#006e4b",
+            "on-tertiary-container": "#67f4b7",
+            "surface-bright": "#f7f9fb",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "surface-container-highest": "#e0e3e5",
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#464555",
+            "background": "#f7f9fb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "24": "24px",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "16px",
+            "margin-desktop": "32px",
+            "gutter": "16px",
+            "lg": "24px",
+            "xl": "32px"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "label-md": ["Geist"],
+            "label-sm": ["Geist"],
+            "headline-md": ["Geist"],
+            "headline-lg": ["Geist"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col lg:flex-row">
+
+  <!-- Left Sidebar Panel -->
+  <aside class="w-full lg:w-[280px] bg-surface border-b lg:border-b-0 lg:border-r border-outline-variant flex flex-col justify-between p-6 shrink-0 lg:fixed lg:h-screen z-40">
+    <div class="space-y-8">
+      <!-- Title Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='/admin/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-[32px]">school</span>
+        <div class="flex flex-col text-left">
+          <h1 class="font-headline-md text-headline-md font-bold text-primary leading-tight" id="college-name-header">SmartAttend</h1>
+          <span class="font-label-sm text-[10px] text-on-surface-variant tracking-wider uppercase">ADMIN PORTAL</span>
+        </div>
+      </div>
+      
+      <!-- Nav Links -->
+      <nav class="flex flex-col gap-1.5">
+        <a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant font-label-md rounded-xl hover:bg-surface-container transition-colors" href="/admin/dashboard.html">
+          <span class="material-symbols-outlined text-[20px]">dashboard</span>
+          <span>Overview</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 text-primary font-label-md rounded-xl bg-primary/5 border-l-4 border-primary transition-all" href="/admin/students.html">
+          <span class="material-symbols-outlined text-[20px]">group</span>
+          <span>Students Directory</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant font-label-md rounded-xl hover:bg-surface-container transition-colors" href="/admin/faculty.html">
+          <span class="material-symbols-outlined text-[20px]">badge</span>
+          <span>Faculty Directory</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant font-label-md rounded-xl hover:bg-surface-container transition-colors" href="/admin/settings.html">
+          <span class="material-symbols-outlined text-[20px]">settings</span>
+          <span>System Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Admin profile box -->
+    <div class="flex items-center justify-between border-t border-outline-variant pt-6 mt-8">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">
+          AD
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="text-body-sm font-semibold text-on-surface" id="admin-name">Administrator</span>
+          <span class="text-[10px] text-on-surface-variant" id="admin-email">admin@smartattend.co</span>
+        </div>
+      </div>
+      <button id="btn-logout" class="material-symbols-outlined text-error hover:bg-error-container/10 p-2 rounded-full transition-colors active:scale-90" title="Sign Out">logout</button>
+    </div>
+  </aside>
+
+  <!-- Right Content Panel -->
+  <div class="flex-grow flex flex-col min-w-0 lg:pl-[280px]">
+    <!-- Top AppBar (Mobile) -->
+    <header class="flex lg:hidden justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-30 bg-surface shadow-sm border-b border-outline-variant">
+      <div class="flex items-center gap-2" onclick="window.location.href='/admin/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-[28px]">school</span>
+        <h2 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h2>
+      </div>
+      <button id="btn-logout-mobile" class="material-symbols-outlined p-2 text-error hover:bg-error-container/10 rounded-full">logout</button>
+    </header>
+
+    <main class="flex-grow p-margin-mobile md:p-margin-desktop pb-24 bg-background overflow-x-hidden gap-lg flex flex-col">
+      <!-- Back to students path -->
+      <div class="flex items-center">
+        <a href="/admin/students.html" class="flex items-center gap-2 text-primary font-label-md text-label-md hover:underline">
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span>Back to Students Directory</span>
+        </a>
+      </div>
+
+      <div class="flex flex-col text-left gap-1">
+        <h3 class="font-headline-lg text-headline-lg text-on-surface">Bulk Import Students</h3>
+        <p class="text-body-sm text-on-surface-variant">Upload student roster spreadsheet sheets (CSV or Excel formats) to register them in bulk.</p>
+      </div>
+
+      <!-- Part A: File Uploader Area -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-lg" id="uploader-section">
+        <!-- Upload dropzone -->
+        <div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-24 border-2 border-dashed border-outline-variant hover:border-primary/60 transition-all flex flex-col items-center justify-center gap-4 text-center cursor-pointer shadow-sm relative" id="dropzone">
+          <input type="file" id="file-input" class="absolute inset-0 opacity-0 cursor-pointer" accept=".csv, .xlsx"/>
+          <div class="w-16 h-16 bg-primary/5 rounded-full flex items-center justify-center text-primary" id="upload-icon-wrapper">
+            <span class="material-symbols-outlined text-[36px] transition-transform duration-300" id="upload-icon">upload_file</span>
+          </div>
+          <div class="space-y-1">
+            <p class="font-semibold text-body-md text-on-surface">Drag and drop student roster here</p>
+            <p class="text-xs text-on-surface-variant">Supports CSV and Microsoft Excel (.xlsx) formats (max 1000 rows)</p>
+          </div>
+          <button class="h-10 px-6 bg-primary/5 text-primary font-label-md text-label-md rounded-full hover:bg-primary/10 active:scale-95 transition-all">
+            Browse Files
+          </button>
+        </div>
+
+        <!-- Download template panel -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 border border-outline-variant flex flex-col justify-between gap-6 shadow-sm text-left">
+          <div class="space-y-3">
+            <h4 class="font-headline-md text-headline-md text-on-surface">Download Template</h4>
+            <p class="text-xs text-on-surface-variant leading-relaxed">Ensure your sheet columns match the following headers exactly (case-sensitive) to prevent validation errors:</p>
+            <div class="bg-surface p-3 rounded-xl border border-outline-variant font-mono text-[10px] space-y-1 text-on-surface-variant">
+              <p class="font-bold text-primary">Required Columns:</p>
+              <p>• University Roll Number * (Mandatory, Unique)</p>
+              <p>• Student Name * (Mandatory)</p>
+              <p>• Registered Mobile Number * (Mandatory, Unique)</p>
+              <p>• Lecture Hall * (Mandatory, e.g. LH-01)</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-2">
+            <button class="w-full h-11 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-xl font-label-sm flex items-center justify-center gap-2 active:scale-95 transition-all" id="btn-download-csv">
+              <span class="material-symbols-outlined text-[18px]">download</span>
+              <span>Download CSV Template</span>
+            </button>
+            <button class="w-full h-11 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-xl font-label-sm flex items-center justify-center gap-2 active:scale-95 transition-all" id="btn-download-xlsx">
+              <span class="material-symbols-outlined text-[18px]">download</span>
+              <span>Download Excel Template</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Part B: Parsing & Verification Dashboard -->
+      <section class="bg-surface-container-lowest p-6 rounded-24 border border-outline-variant shadow-sm text-left hidden animate-fade-in" id="preview-dashboard">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-outline-variant pb-4 gap-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[28px] text-primary">verified</span>
+            <h4 class="font-headline-md text-headline-md text-on-surface">Roster Verification Preview</h4>
+          </div>
+          <!-- KPI Stats Pills -->
+          <div class="flex flex-wrap gap-2">
+            <div class="bg-surface px-3 py-1.5 rounded-full border border-outline-variant flex items-center gap-1.5">
+              <span class="text-xs text-on-surface-variant font-label-md">Total Rows</span>
+              <span class="text-sm font-bold text-primary" id="count-total">0</span>
+            </div>
+            <div class="bg-surface px-3 py-1.5 rounded-full border border-outline-variant flex items-center gap-1.5">
+              <span class="text-xs text-on-surface-variant font-label-md">Valid Rows</span>
+              <span class="text-sm font-bold text-tertiary" id="count-valid">0</span>
+            </div>
+            <div class="bg-surface px-3 py-1.5 rounded-full border border-outline-variant flex items-center gap-1.5 animate-pulse-soft">
+              <span class="text-xs text-on-surface-variant font-label-md">Invalid Rows</span>
+              <span class="text-sm font-bold text-error" id="count-invalid">0</span>
+            </div>
+            <div class="bg-surface px-3 py-1.5 rounded-full border border-outline-variant flex items-center gap-1.5">
+              <span class="text-xs text-on-surface-variant font-label-md">Duplicate Mobiles</span>
+              <span class="text-sm font-bold text-orange-500" id="count-dup-mobiles">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Warning alert if invalid rows exist (Blocks Import) -->
+        <div class="bg-error-container text-on-error-container p-4 rounded-xl flex gap-3 items-start mb-6 hidden" id="validation-warning">
+          <span class="material-symbols-outlined text-[20px] text-error shrink-0">error</span>
+          <div class="text-left">
+            <p class="font-semibold text-error text-sm">Roster contains invalid or duplicate rows</p>
+            <p class="text-xs text-on-surface-variant mt-1">The import is strictly blocked. To guarantee database integrity, you cannot proceed with a partial import. Please download the template, fix your spreadsheet, and upload it again.</p>
+          </div>
+        </div>
+
+        <!-- Preview grid -->
+        <div class="border border-outline-variant rounded-xl overflow-hidden mb-6">
+          <div class="max-h-[360px] overflow-y-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-surface border-b border-outline-variant sticky top-0">
+                <tr>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Row</th>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Roll Number</th>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Student Name</th>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Mobile Number</th>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Lecture Hall</th>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Validation Notes</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant/30 text-body-sm" id="preview-table-body">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="flex justify-end gap-4 border-t border-outline-variant pt-4">
+          <button class="h-12 px-6 border border-outline-variant text-on-surface rounded-full font-label-md hover:bg-surface-container-low active:scale-95 transition-all" id="btn-cancel-preview">
+            Clear File
+          </button>
+          <button class="h-12 px-8 gradient-btn text-on-primary rounded-full font-label-md active:scale-95 transition-all shadow-md flex items-center gap-2" id="btn-confirm-import">
+            <span class="material-symbols-outlined text-[20px]">upload</span>
+            <span>Import Student Roster</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Import Progress Overlay (Hidden by default) -->
+      <section class="bg-surface-container-lowest p-8 rounded-24 border border-outline-variant soft-bloom flex flex-col items-center justify-center gap-6 hidden animate-fade-in" id="progress-card">
+        <span class="material-symbols-outlined text-primary text-[64px] animate-spin">progress_activity</span>
+        <div class="text-center">
+          <h4 class="font-headline-md text-headline-md text-on-surface mb-2" id="progress-title">Importing student roster...</h4>
+          <p class="text-body-sm text-on-surface-variant" id="progress-subtitle">Transaction processing. Please do not close this window.</p>
+        </div>
+        <div class="w-full max-w-md bg-surface border border-outline-variant rounded-full h-4 overflow-hidden p-[2px]">
+          <div class="bg-primary h-full rounded-full transition-all duration-300" style="width: 0%" id="progress-bar-fill"></div>
+        </div>
+        <p class="text-sm font-semibold text-primary" id="progress-text">0% Completed</p>
+      </section>
+
+      <!-- Final Import Summary Result dialog (Hidden initially) -->
+      <section class="bg-surface-container-lowest p-8 rounded-24 border border-outline-variant soft-bloom flex flex-col items-center justify-center gap-6 hidden animate-fade-in" id="summary-card">
+        <div class="w-20 h-20 bg-tertiary-container/10 rounded-full flex items-center justify-center text-tertiary">
+          <span class="material-symbols-outlined text-[40px]">check_circle</span>
+        </div>
+        
+        <div class="text-center space-y-1">
+          <h4 class="font-headline-lg text-headline-lg text-on-surface">Roster Import Completed</h4>
+          <p class="text-body-sm text-on-surface-variant">The roster sheet has been securely written to the database.</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-6 w-full max-w-sm my-2 text-center">
+          <div class="p-4 bg-surface rounded-2xl border">
+            <span class="text-2xl font-bold text-tertiary" id="summary-imported">0</span>
+            <span class="text-[10px] text-on-surface-variant uppercase tracking-wider block mt-1">Imported</span>
+          </div>
+          <div class="p-4 bg-surface rounded-2xl border">
+            <span class="text-2xl font-bold text-on-surface-variant" id="summary-skipped">0</span>
+            <span class="text-[10px] text-on-surface-variant uppercase tracking-wider block mt-1">Skipped</span>
+          </div>
+          <div class="p-4 bg-surface rounded-2xl border">
+            <span class="text-2xl font-bold text-error" id="summary-failed">0</span>
+            <span class="text-[10px] text-on-surface-variant uppercase tracking-wider block mt-1">Failed</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 w-full max-w-md mt-4">
+          <button class="flex-1 h-12 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-full font-label-md active:scale-95 transition-all hidden" id="btn-download-errors">
+            Download Error Report
+          </button>
+          <button class="flex-1 h-12 gradient-btn text-on-primary rounded-full font-label-md active:scale-95 transition-all shadow-md" id="btn-finish-import">
+            Finish & View Directory
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest border-t border-surface-variant">
+      <p class="font-body-sm text-body-sm text-on-surface-variant" id="footer-text">© 2026 College Smart Attendance System. Academic Modernist Design.</p>
+      <div class="flex gap-6">
+        <a class="text-on-surface-variant font-body-sm hover:text-primary transition-opacity underline decoration-transparent hover:decoration-primary" href="#">Privacy Policy</a>
+        <a class="text-on-surface-variant font-body-sm hover:text-primary transition-opacity underline decoration-transparent hover:decoration-primary" href="#">Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Required scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script type="module">
+    import { api } from '/js/api.js';
+    import { getCurrentUser, logout } from '/js/auth.js';
+    import { getSetting } from '/js/utils.js';
+
+    // UI elements
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const uploadIcon = document.getElementById('upload-icon');
+    const previewDashboard = document.getElementById('preview-dashboard');
+    const previewTableBody = document.getElementById('preview-table-body');
+    const btnCancelPreview = document.getElementById('btn-cancel-preview');
+    const btnConfirmImport = document.getElementById('btn-confirm-import');
+    const validationWarning = document.getElementById('validation-warning');
+
+    // Counters
+    const countTotal = document.getElementById('count-total');
+    const countValid = document.getElementById('count-valid');
+    const countInvalid = document.getElementById('count-invalid');
+    const countDupMobiles = document.getElementById('count-dup-mobiles');
+
+    // Progress
+    const progressCard = document.getElementById('progress-card');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressText = document.getElementById('progress-text');
+
+    // Summary
+    const summaryCard = document.getElementById('summary-card');
+    const summaryImported = document.getElementById('summary-imported');
+    const summarySkipped = document.getElementById('summary-skipped');
+    const summaryFailed = document.getElementById('summary-failed');
+    const btnDownloadErrors = document.getElementById('btn-download-errors');
+    const btnFinishImport = document.getElementById('btn-finish-import');
+
+    const adminName = document.getElementById('admin-name');
+    const adminEmail = document.getElementById('admin-email');
+    const headerCollegeName = document.getElementById('college-name-header');
+
+    // State variables
+    let parsedRows = []; // contains { roll, name, mobile, hall, isValid, errors: [] }
+    let validRowsForImport = [];
+    let dbExistingRolls = new Set();
+    let dbExistingMobiles = new Set();
+    let failedImportReports = [];
+
+    // Allowed Lecture Halls
+    const ALLOWED_HALLS = new Set(['LH-01', 'LH-02', 'LH-03', 'LH-04', 'LH-05', 'LH-06']);
+
+    // Hydrate Settings
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          headerCollegeName.textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}. Academic Modernist Design.`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadSettings();
+
+    // Admin profile
+    async function initUser() {
+      const user = await getCurrentUser();
+      if (user) {
+        if (adminName) adminName.textContent = user.name;
+        if (adminEmail) adminEmail.textContent = user.email;
+      }
+    }
+    initUser();
+
+    // Logout controller
+    function handleLogout() {
+      window.components.confirmDialog({
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out?',
+        confirmLabel: 'Sign Out',
+        cancelLabel: 'Cancel'
+      }).then((result) => {
+        if (result) logout();
+      });
+    }
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
+    document.getElementById('btn-logout-mobile').addEventListener('click', handleLogout);
+
+    // Fetch existing records from DB for uniqueness validation
+    async function loadDBValidationAssets() {
+      try {
+        const { data, error } = await api.Students.getAllStudentIdsAndMobiles();
+        if (error) throw error;
+        dbExistingRolls.clear();
+        dbExistingMobiles.clear();
+        if (data) {
+          data.forEach(item => {
+            if (item.roll_number) dbExistingRolls.add(item.roll_number.trim().toUpperCase());
+            if (item.mobile_number) dbExistingMobiles.add(item.mobile_number.trim());
+          });
+        }
+      } catch (err) {
+        console.error('[Import] Failed to fetch DB assets:', err);
+        window.utils.showError('Warning: Failed to contact validation servers. Local validation may be incomplete.');
+      }
+    }
+    loadDBValidationAssets();
+
+    // Drag-and-Drop visual feedback
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-primary', 'bg-primary/5');
+      uploadIcon.classList.add('scale-110');
+    });
+
+    const resetDropzoneVisual = () => {
+      dropzone.classList.remove('border-primary', 'bg-primary/5');
+      uploadIcon.classList.remove('scale-110');
+    };
+
+    dropzone.addEventListener('dragleave', resetDropzoneVisual);
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      resetDropzoneVisual();
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleSelectedFile(files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (files.length > 0) {
+        handleSelectedFile(files[0]);
+      }
+    });
+
+    // File handler
+    function handleSelectedFile(file) {
+      if (!file) return;
+      const extension = file.name.split('.').pop().toLowerCase();
+      if (extension !== 'csv' && extension !== 'xlsx') {
+        window.utils.showError('Invalid file type. Only CSV and Excel (.xlsx) formats are supported.');
+        return;
+      }
+
+      window.utils.showLoader('Parsing sheet contents...');
+      const reader = new FileReader();
+      
+      reader.onload = async (e) => {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+          if (!json || json.length < 2) {
+            window.utils.hideLoader();
+            window.utils.showError('Uploaded file is empty or missing data headers.');
+            return;
+          }
+
+          // Parse and validate
+          await parseAndValidateData(json);
+          window.utils.hideLoader();
+        } catch (err) {
+          window.utils.hideLoader();
+          console.error(err);
+          window.utils.showError('Failed to read document template. Verify file configuration.');
+        }
+      };
+      
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Parsing and Validation Engine (All-or-Nothing validation on frontend)
+    async function parseAndValidateData(json) {
+      const headerRow = json[0].map(h => String(h || '').trim().toLowerCase());
+      
+      const rollIdx = headerRow.indexOf('university roll number');
+      const nameIdx = headerRow.indexOf('student name');
+      const mobileIdx = headerRow.indexOf('registered mobile number');
+      const hallIdx = headerRow.indexOf('lecture hall');
+
+      if (rollIdx === -1 || nameIdx === -1 || mobileIdx === -1 || hallIdx === -1) {
+        window.utils.showError("Required headers missing. Roster headers must precisely match: 'University Roll Number', 'Student Name', 'Registered Mobile Number', and 'Lecture Hall'.");
+        return;
+      }
+
+      parsedRows = [];
+      validRowsForImport = [];
+      failedImportReports = [];
+
+      const fileRollNumbers = new Map(); // tracks duplicates inside file (roll -> array of row numbers)
+      const fileMobiles = new Map();    // tracks duplicates inside file (mobile -> array of row numbers)
+
+      // First pass: extract records and map duplicate indices
+      for (let i = 1; i < json.length; i++) {
+        const row = json[i];
+        if (row.length === 0 || row.every(cell => cell === null || cell === '')) {
+          continue; // skip blank rows
+        }
+
+        const roll = String(row[rollIdx] || '').trim();
+        const name = String(row[nameIdx] || '').trim();
+        const mobile = String(row[mobileIdx] || '').trim();
+        const hall = String(row[hallIdx] || '').trim().toUpperCase();
+
+        const record = {
+          rowNum: i + 1,
+          roll,
+          name,
+          mobile,
+          hall,
+          isValid: true,
+          errors: []
+        };
+
+        // File-level duplicate checks registry
+        if (roll) {
+          const upperRoll = roll.toUpperCase();
+          if (!fileRollNumbers.has(upperRoll)) fileRollNumbers.set(upperRoll, []);
+          fileRollNumbers.get(upperRoll).push(record.rowNum);
+        }
+        
+        if (mobile) {
+          if (!fileMobiles.has(mobile)) fileMobiles.set(mobile, []);
+          fileMobiles.get(mobile).push(record.rowNum);
+        }
+
+        parsedRows.push(record);
+      }
+
+      let validCount = 0;
+      let invalidCount = 0;
+      let dupRollCount = 0;
+      let dupMobileCount = 0;
+
+      // Second pass: detailed row validation
+      for (const row of parsedRows) {
+        // 1. Missing mandatory field checks
+        if (!row.roll) row.errors.push('University Roll Number is missing.');
+        if (!row.name) row.errors.push('Student Name is missing.');
+        if (!row.mobile) row.errors.push('Registered Mobile Number is missing.');
+        if (!row.hall) row.errors.push('Lecture Hall is missing.');
+
+        // 2. Format checks
+        if (row.roll && row.roll.length > 50) {
+          row.errors.push('University Roll Number exceeds maximum limit of 50 characters.');
+        }
+
+        if (row.mobile) {
+          const mobileClean = row.mobile;
+          if (!/^[6-9]\d{9}$/.test(mobileClean)) {
+            row.errors.push('Mobile Number format invalid. Must be exactly 10 digits starting with 6-9.');
+          }
+        }
+
+        if (row.hall && !ALLOWED_HALLS.has(row.hall)) {
+          row.errors.push(`Invalid Lecture Hall "${row.hall}". Must be one of LH-01 to LH-06.`);
+        }
+
+        // 3. File uniqueness checks
+        if (row.roll) {
+          const upperRoll = row.roll.toUpperCase();
+          const occurrences = fileRollNumbers.get(upperRoll);
+          if (occurrences && occurrences.length > 1) {
+            dupRollCount++;
+            row.errors.push(`Duplicate University Roll Number inside sheet (Row occurrences: ${occurrences.join(', ')}).`);
+          }
+        }
+
+        if (row.mobile) {
+          const occurrences = fileMobiles.get(row.mobile);
+          if (occurrences && occurrences.length > 1) {
+            dupMobileCount++;
+            row.errors.push(`Duplicate Mobile Number inside sheet (Row occurrences: ${occurrences.join(', ')}).`);
+          }
+        }
+
+        // 4. Database uniqueness checks
+        if (row.roll && dbExistingRolls.has(row.roll.toUpperCase())) {
+          row.errors.push('University Roll Number already exists in the database.');
+        }
+
+        if (row.mobile && dbExistingMobiles.has(row.mobile)) {
+          row.errors.push('Mobile Number already exists in the database.');
+        }
+
+        // Determine final row status
+        if (row.errors.length > 0) {
+          row.isValid = false;
+          invalidCount++;
+        } else {
+          row.isValid = true;
+          validCount++;
+          validRowsForImport.push({
+            roll_number: row.roll,
+            student_name: row.name,
+            mobile_number: row.mobile,
+            lecture_hall: row.hall
+          });
+        }
+      }
+
+      // Render counts to dashboard UI
+      countTotal.textContent = parsedRows.length;
+      countValid.textContent = validCount;
+      countInvalid.textContent = invalidCount;
+      countDupMobiles.textContent = dupMobileCount;
+
+      // Show alert warnings and block import button
+      if (invalidCount > 0) {
+        validationWarning.classList.remove('hidden');
+        btnConfirmImport.disabled = true;
+        btnConfirmImport.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        validationWarning.classList.add('hidden');
+        btnConfirmImport.disabled = false;
+        btnConfirmImport.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+
+      // Render the Preview grid table body
+      renderPreviewGrid();
+
+      // Toggle views
+      dropzone.classList.add('hidden');
+      document.getElementById('uploader-section').classList.add('hidden');
+      previewDashboard.classList.remove('hidden');
+    }
+
+    // Render parsed preview grid
+    function renderPreviewGrid() {
+      let html = '';
+      parsedRows.forEach(row => {
+        const badge = row.isValid 
+          ? window.components.badge('Valid', 'present') 
+          : window.components.badge('Invalid', 'absent');
+          
+        const notes = row.isValid 
+          ? '<span class="text-success flex items-center gap-1 font-semibold"><span class="material-symbols-outlined text-sm">check_circle</span>Ready</span>'
+          : `<span class="text-error font-medium">${row.errors.join(' ')}</span>`;
+
+        html += `
+          <tr class="${row.isValid ? 'hover:bg-surface-container-lowest' : 'bg-error/5 hover:bg-error/10'} transition-colors">
+            <td class="p-3 font-semibold text-on-surface-variant">${row.rowNum}</td>
+            <td class="p-3 font-mono font-medium">${row.roll || '—'}</td>
+            <td class="p-3 font-medium">${row.name || '—'}</td>
+            <td class="p-3">${row.mobile || '—'}</td>
+            <td class="p-3 font-semibold">${row.hall || '—'}</td>
+            <td class="p-3">${badge}</td>
+            <td class="p-3 text-xs">${notes}</td>
+          </tr>
+        `;
+      });
+      previewTableBody.innerHTML = html;
+    }
+
+    // Clear and reset preview
+    btnCancelPreview.addEventListener('click', () => {
+      previewDashboard.classList.add('hidden');
+      dropzone.classList.remove('hidden');
+      document.getElementById('uploader-section').classList.remove('hidden');
+      fileInput.value = '';
+      parsedRows = [];
+      validRowsForImport = [];
+    });
+
+    // Commit Import - All-or-Nothing single database transaction
+    btnConfirmImport.addEventListener('click', async () => {
+      if (validRowsForImport.length === 0) return;
+
+      previewDashboard.classList.add('hidden');
+      progressCard.classList.remove('hidden');
+      
+      progressBarFill.style.width = '10%';
+      progressText.textContent = '10% Completed';
+      document.getElementById('progress-title').textContent = 'Connecting to database...';
+
+      let insertedCount = 0;
+      let failedCount = 0;
+      failedImportReports = [];
+
+      try {
+        // Yield to browser UI thread
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        progressBarFill.style.width = '50%';
+        progressText.textContent = '50% Completed';
+        document.getElementById('progress-title').textContent = 'Executing database transaction...';
+
+        // Fire single atomic transaction to database RPC
+        const { data: res, error } = await api.RPC.bulkImportStudents(validRowsForImport);
+        
+        if (error) {
+          console.error('[Import Batch Error]', error);
+          failedCount = validRowsForImport.length;
+          
+          validRowsForImport.forEach((student, index) => {
+            failedImportReports.push({
+              rowNum: index + 2,
+              roll: student.roll_number,
+              name: student.student_name,
+              mobile: student.mobile_number,
+              hall: student.lecture_hall,
+              reason: error.message || 'Database transaction rollback'
+            });
+          });
+        } else if (res && res.success === false) {
+          failedCount = validRowsForImport.length;
+          
+          validRowsForImport.forEach((student, index) => {
+            failedImportReports.push({
+              rowNum: index + 2,
+              roll: student.roll_number,
+              name: student.student_name,
+              mobile: student.mobile_number,
+              hall: student.lecture_hall,
+              reason: res.message || 'Database transaction aborted'
+            });
+          });
+        } else if (res && res.success === true) {
+          insertedCount = res.inserted_count || 0;
+        }
+
+        // Finalize progress visual
+        progressBarFill.style.width = '100%';
+        progressText.textContent = '100% Completed';
+        document.getElementById('progress-title').textContent = 'Finalizing import stats...';
+        await new Promise(resolve => setTimeout(resolve, 350));
+
+        // Render Summary Results
+        progressCard.classList.add('hidden');
+        summaryCard.classList.remove('hidden');
+
+        summaryImported.textContent = insertedCount;
+        summarySkipped.textContent = 0; // all-or-nothing
+        summaryFailed.textContent = failedCount;
+
+        if (failedImportReports.length > 0) {
+          btnDownloadErrors.classList.remove('hidden');
+        } else {
+          btnDownloadErrors.classList.add('hidden');
+        }
+
+      } catch (err) {
+        console.error('[Import Commit Fatal Error]', err);
+        progressCard.classList.add('hidden');
+        window.utils.showError('Roster import failed due to an unexpected database error.');
+        previewDashboard.classList.remove('hidden');
+      }
+    });
+
+    // Download CSV template file generator
+    document.getElementById('btn-download-csv').addEventListener('click', () => {
+      const csvContent = "University Roll Number,Student Name,Registered Mobile Number,Lecture Hall\n" +
+                         "23CS001,Rahul Kumar,9876543210,LH-01\n" +
+                         "23CS002,Priya Sharma,9123456789,LH-02\n";
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', 'SmartAttend_Student_Roster_Template.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Download XLSX template file generator via SheetJS
+    document.getElementById('btn-download-xlsx').addEventListener('click', () => {
+      const headers = ['University Roll Number', 'Student Name', 'Registered Mobile Number', 'Lecture Hall'];
+      const data = [
+        ['23CS001', 'Rahul Kumar', '9876543210', 'LH-01'],
+        ['23CS002', 'Priya Sharma', '9123456789', 'LH-02']
+      ];
+      
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+      XLSX.utils.book_append_sheet(wb, ws, "Student Template");
+      XLSX.writeFile(wb, 'SmartAttend_Student_Roster_Template.xlsx');
+    });
+
+    // Error report generator
+    btnDownloadErrors.addEventListener('click', () => {
+      if (failedImportReports.length === 0) return;
+
+      let csv = 'Row Number,University Roll Number,Student Name,Mobile Number,Lecture Hall,Failure Reason\n';
+      failedImportReports.forEach(row => {
+        csv += `"${row.rowNum}","${row.roll || ''}","${(row.name || '').replace(/"/g, '""')}","${row.mobile || ''}","${row.hall || ''}","${(row.reason || '').replace(/"/g, '""')}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', 'SmartAttend_Import_Error_Report.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Finish import
+    btnFinishImport.addEventListener('click', () => {
+      window.location.href = '/admin/students.html';
+    });
+  </script>
+</body>
+</html>

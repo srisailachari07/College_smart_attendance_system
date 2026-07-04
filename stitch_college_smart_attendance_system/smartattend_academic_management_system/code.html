@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartAttend | Academic Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-bloom {
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.05);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E2E8F0;
+        }
+        .indigo-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#6ffbbe",
+                      "surface-container-high": "#e6e8ea",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#e0e3e5",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "primary": "#3525cd",
+                      "surface-container": "#eceef0",
+                      "on-error": "#ffffff",
+                      "tertiary-container": "#006e4b",
+                      "surface-bright": "#f7f9fb",
+                      "secondary-fixed-dim": "#c0c1ff",
+                      "error": "#ba1a1a",
+                      "tertiary": "#005338",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-background": "#191c1e",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#e1e0ff",
+                      "on-surface-variant": "#464555",
+                      "primary-fixed": "#e2dfff",
+                      "surface-container-low": "#f2f4f6",
+                      "on-primary": "#ffffff",
+                      "surface-tint": "#4d44e3",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed-variant": "#2f2ebe",
+                      "inverse-surface": "#2d3133",
+                      "on-secondary-fixed": "#07006c",
+                      "secondary-container": "#6063ee",
+                      "surface-container-highest": "#e0e3e5",
+                      "secondary": "#4648d4",
+                      "on-primary-fixed": "#0f0069",
+                      "on-tertiary-fixed": "#002113",
+                      "on-primary-container": "#dad7ff",
+                      "outline": "#777587",
+                      "surface": "#f7f9fb",
+                      "primary-container": "#4f46e5",
+                      "surface-dim": "#d8dadc",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#67f4b7",
+                      "inverse-primary": "#c3c0ff",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#191c1e",
+                      "background": "#f7f9fb",
+                      "on-secondary-container": "#fffbff",
+                      "outline-variant": "#c7c4d8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "2xl": "48px",
+                      "max-width": "1280px",
+                      "margin-mobile": "16px",
+                      "gutter": "16px",
+                      "xl": "32px",
+                      "margin-desktop": "32px",
+                      "base": "4px",
+                      "lg": "24px",
+                      "sm": "8px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Geist"],
+                      "body-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-sm": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "label-md": ["Geist"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Geist"],
+                      "headline-lg": ["Geist"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopAppBar Navigation -->
+<header class="bg-surface dark:bg-inverse-surface shadow-sm flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-50">
+<div class="flex items-center gap-3 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-size: 32px;">school</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">SmartAttend</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary dark:text-primary-fixed-dim font-bold font-label-md text-label-md" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-3 py-1 rounded-full font-label-md text-label-md" href="#">Support</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors px-3 py-1 rounded-full font-label-md text-label-md" href="#">System Status</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex flex-col items-end">
+<span class="font-label-md text-label-md font-bold text-on-surface">Central University</span>
+<span class="text-[10px] text-on-surface-variant opacity-70 uppercase tracking-widest">Academic Year 2024-25</span>
+</div>
+<div class="w-10 h-10 rounded-full indigo-gradient flex items-center justify-center text-white cursor-pointer hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">person</span>
+</div>
+</div>
+</header>
+<main class="flex-grow relative overflow-hidden">
+<!-- Background Animation Effect -->
+<div class="absolute inset-0 -z-10 opacity-30">
+
+</div>
+<div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-xl lg:py-2xl">
+<!-- Hero Section -->
+<div class="mb-xl lg:mb-2xl">
+<div class="inline-flex items-center gap-2 bg-primary-container/10 border border-primary-container/20 px-4 py-1.5 rounded-full mb-6">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-wide">SYSTEM VERSION V2.0 ACTIVE</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-4 max-w-2xl leading-tight">
+                    Intelligent Attendance for <span class="text-primary">Modern Academia.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                    Seamlessly track, manage, and report academic presence with Central University's next-generation attendance ecosystem.
+                </p>
+</div>
+<!-- Bento Grid Action Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-2xl">
+<!-- Student Attendance Card -->
+<div class="group relative bg-surface-container-lowest rounded-[24px] p-8 border border-outline-variant soft-bloom transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+<div class="mb-8 w-14 h-14 rounded-2xl indigo-gradient flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" style="font-size: 28px;">how_to_reg</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Student Attendance</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Log your daily presence using QR codes or smart identification markers.</p>
+<div class="flex items-center gap-2 text-primary font-bold group-hover:gap-4 transition-all">
+<span>Check In Now</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+<!-- Registration Card -->
+<div class="group relative bg-surface-container-lowest rounded-[24px] p-8 border border-outline-variant soft-bloom transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+<div class="mb-8 w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" style="font-size: 28px;">person_add</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">New Registration</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Enroll in the system to begin tracking your academic journey and metrics.</p>
+<div class="flex items-center gap-2 text-secondary font-bold group-hover:gap-4 transition-all">
+<span>Get Started</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+<!-- Faculty Login Card -->
+<div class="group relative bg-surface-container-lowest rounded-[24px] p-8 border border-outline-variant soft-bloom transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary-container/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+<div class="mb-8 w-14 h-14 rounded-2xl bg-tertiary flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" style="font-size: 28px;">supervisor_account</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Faculty Login</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Manage your classes, verify student attendance, and export logs.</p>
+<div class="flex items-center gap-2 text-tertiary-container font-bold group-hover:gap-4 transition-all">
+<span>Faculty Portal</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+<!-- Admin Login Card -->
+<div class="group relative bg-surface-container-lowest rounded-[24px] p-8 border border-outline-variant soft-bloom transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-error/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+<div class="mb-8 w-14 h-14 rounded-2xl bg-inverse-surface flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" style="font-size: 28px;">admin_panel_settings</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Admin Login</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Global system configuration, user management, and campus reports.</p>
+<div class="flex items-center gap-2 text-on-surface font-bold group-hover:gap-4 transition-all">
+<span>Access Console</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Visual Feature Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
+<div class="space-y-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Campus-Wide Integration</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Our modernist approach to attendance eliminates the friction of traditional paper logs. Leveraging real-time data sync across all departments, Central University ensures transparency and reliability.
+                    </p>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="font-label-md text-label-md">Biometric &amp; QR Verification Support</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant">
+<span class="material-symbols-outlined text-primary">assessment</span>
+<span class="font-label-md text-label-md">Automated Weekly/Monthly Reporting</span>
+</div>
+</div>
+</div>
+<div class="relative rounded-[32px] overflow-hidden aspect-video shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="A clean, professional photograph of a modern university computer lab with large windows and bright indirect sunlight. Students are sitting at minimalist white desks using sleek laptops, while a large wall-mounted screen displays a high-tech dashboard with attendance data and blue geometric charts. The atmosphere is academic, quiet, and focused, utilizing a color palette of indigo, white, and soft greys to match a premium institutional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlkwFwDA1mAET_X6nYuqbVkU9ICB3z_7JMy5NWTsh9xnuRN4NXh1vp38HU0_w_pSVuryT0XMSD14FiSn3XMnsKzk8mzOuX_OfvvLy7oFVD2Py7wpw7VInzMGEFpYdkWtIqRbq0crswAtQCPPhB8fHb_OVGzl16ZLXuYhPhLquils1ZAdc2KXS-tEpskGdti3x1I_T9nrX57eUcRZnQZANehvOSl_gRCLDvcK-CFwTaMbD3ozyOyWXsbRJ4YCK89T6LMKR2vmxt8uE"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Shell (Bottom Navigation for Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe pt-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] bg-surface dark:bg-inverse-surface rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-2xl px-5 py-2 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm-mobile">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-2 hover:bg-surface-variant active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-sm text-label-sm-mobile">Classes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-2 hover:bg-surface-variant active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="font-label-sm text-label-sm-mobile">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-2 hover:bg-surface-variant active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm-mobile">Profile</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest dark:bg-surface-dim border-t border-surface-variant dark:border-outline-variant mt-12">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">SmartAttend</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim">Academic Modernist Design</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-outline-variant text-center md:text-left">
+            © 2024 College Smart Attendance System. Academic Modernist Design.
+        </p>
+<div class="flex items-center gap-6">
+<a class="text-on-surface-variant dark:text-outline-variant font-body-sm text-body-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-body-sm text-body-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-opacity duration-200" href="#">Support</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-body-sm text-body-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-opacity duration-200" href="#">System Status</a>
+</div>
+</footer>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Potential for lightweight JS effects if needed
+            });
+        });
+
+        // Sticky header background transition on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('backdrop-blur-md', 'bg-surface/80');
+            } else {
+                header.classList.remove('backdrop-blur-md', 'bg-surface/80');
+            }
+        });
+    </script>
+</body></html>

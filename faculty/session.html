@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Live Attendance Session | SmartAttend</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared CSS -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary": "#3525cd",
+            "surface": "#f7f9fb",
+            "outline": "#777587",
+            "outline-variant": "#c7c4d8",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "on-primary": "#ffffff",
+            "tertiary": "#005338",
+            "tertiary-container": "#006e4b",
+            "on-tertiary-container": "#67f4b7",
+            "surface-bright": "#f7f9fb",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "surface-container-highest": "#e0e3e5",
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#464555",
+            "background": "#f7f9fb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "24": "24px",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "16px",
+            "margin-desktop": "32px",
+            "gutter": "16px",
+            "lg": "24px",
+            "xl": "32px"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "label-md": ["Geist"],
+            "label-sm": ["Geist"],
+            "headline-md": ["Geist"],
+            "headline-lg": ["Geist"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col lg:flex-row">
+
+  <!-- Route Guard Check -->
+  <script type="module">
+    import { guardRoute } from '/js/auth.js?v=2.2';
+    guardRoute(['faculty', 'admin']);
+  </script>
+
+  <!-- Left Sidebar Panel -->
+  <aside class="w-full lg:w-[280px] bg-surface border-b lg:border-b-0 lg:border-r border-outline-variant flex flex-col justify-between p-6 shrink-0 lg:fixed lg:h-screen z-40">
+    <div class="space-y-8">
+      <!-- Title Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='/faculty/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-[32px]">school</span>
+        <div class="flex flex-col text-left">
+          <h1 class="font-headline-md text-headline-md font-bold text-primary leading-tight" id="header-college-name">SmartAttend</h1>
+          <span class="font-label-sm text-[10px] text-on-surface-variant tracking-wider uppercase">INSTRUCTOR PORTAL</span>
+        </div>
+      </div>
+      
+      <!-- Nav Links -->
+      <nav class="flex flex-col gap-1.5">
+        <a class="flex items-center gap-4 px-4 py-3 text-primary font-label-md rounded-xl bg-primary/5 border-l-4 border-primary transition-all" href="/faculty/dashboard.html">
+          <span class="material-symbols-outlined text-[20px]">dashboard</span>
+          <span>Faculty Dashboard</span>
+        </a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-surface-container" href="/faculty/dashboard.html">
+          <span class="material-symbols-outlined text-[20px]">add_box</span>
+          <span>Start Attendance</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Instructor profile box -->
+    <div class="flex items-center justify-between border-t border-outline-variant pt-6 mt-8">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">
+          IN
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="text-body-sm font-semibold text-on-surface" id="instructor-name">Instructor</span>
+          <span class="text-[10px] text-on-surface-variant">Faculty Member</span>
+        </div>
+      </div>
+      <button id="btn-logout" class="material-symbols-outlined text-error hover:bg-error-container/10 p-2 rounded-full transition-colors active:scale-90" title="Sign Out">logout</button>
+    </div>
+  </aside>
+
+  <!-- Right Content Panel -->
+  <div class="flex-grow flex flex-col min-w-0 lg:pl-[280px]">
+    <!-- Top AppBar (Mobile) -->
+    <header class="flex lg:hidden justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-30 bg-surface shadow-sm border-b border-outline-variant">
+      <div class="flex items-center gap-2" onclick="window.location.href='/faculty/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-[28px]">school</span>
+        <h2 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h2>
+      </div>
+      <button id="btn-logout-mobile" class="material-symbols-outlined p-2 text-error hover:bg-error-container/10 rounded-full">logout</button>
+    </header>
+
+    <main class="flex-grow p-margin-mobile md:p-margin-desktop pb-24 bg-background overflow-x-hidden gap-lg flex flex-col">
+      <!-- Back to Dashboard -->
+      <div class="flex items-center">
+        <a href="/faculty/dashboard.html" class="flex items-center gap-2 text-primary font-label-md text-label-md hover:underline">
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span>Back to Dashboard</span>
+        </a>
+      </div>
+
+      <div class="flex flex-col text-left gap-1">
+        <h3 class="font-headline-lg text-headline-lg text-on-surface" id="session-hall-label">LH-01 Attendance Session</h3>
+        <p class="text-body-sm text-on-surface-variant">Share the attendance code with students in this room. Keep this window open.</p>
+      </div>
+
+      <!-- Main Live Session Workspace Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-stretch">
+        
+        <!-- Live Code Card Panel -->
+        <div class="lg:col-span-8 bg-surface-container-lowest p-8 rounded-24 border border-outline-variant flex flex-col justify-between gap-8 relative overflow-hidden shadow-sm">
+          <!-- Pulse status badge -->
+          <div class="flex justify-between items-center w-full border-b border-outline-variant pb-4">
+            <div class="flex items-center gap-2">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75" id="status-pulse-dot-ping"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary" id="status-pulse-dot"></span>
+              </span>
+              <span class="text-xs font-semibold text-on-surface tracking-wider uppercase" id="session-status-text">LIVE ATTENDANCE ACTIVE</span>
+            </div>
+            
+            <div class="flex gap-4 text-xs text-on-surface-variant font-label-sm font-semibold">
+              <span id="session-hall-name">LH-01</span>
+              <span>•</span>
+              <span id="session-slot-name">Slot S1</span>
+            </div>
+          </div>
+
+          <!-- Code displaying zone -->
+          <div class="flex-grow flex flex-col items-center justify-center py-6 relative">
+            <span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest block mb-4">Verification Code</span>
+            
+            <div class="relative flex items-center justify-center">
+              <span class="text-6xl md:text-8xl font-display-lg tracking-[0.2em] text-primary select-none animate-pulse-soft font-bold" id="attendance-code">0000</span>
+            </div>
+            <!-- Decorative glow -->
+            <div class="absolute inset-0 bg-primary/5 blur-2xl rounded-full -z-10 animate-pulse-soft"></div>
+          </div>
+          
+          <!-- Timer progress bar -->
+          <div class="w-full flex flex-col items-center justify-center gap-4 pt-4">
+            <div class="w-full max-w-xs h-3 bg-surface-container-highest rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-primary to-secondary w-full transition-all duration-300" id="timer-bar"></div>
+            </div>
+            <span class="text-label-md font-label-md text-on-surface" id="timer-text">Expires in 00:00</span>
+          </div>
+
+          <!-- Code regenerate control -->
+          <div class="flex justify-end pt-4 border-t border-outline-variant/60">
+            <button id="refresh-btn" class="h-10 px-4 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-xl font-label-sm flex items-center gap-2 active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-[18px]">refresh</span>
+              <span>Regenerate Code</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Side Roll-Call / Stats Section -->
+        <div class="lg:col-span-4 space-y-6">
+          <div class="bg-surface-container-low p-6 rounded-24 border border-outline-variant h-full flex flex-col gap-6">
+            
+            <!-- Present / Absent Tabs Switcher -->
+            <div class="border-b border-outline-variant pb-2">
+              <div class="flex gap-4">
+                <button id="tab-present" class="font-headline-md text-headline-md pb-2 border-b-2 border-primary text-primary transition-all font-bold focus:outline-none">Present (0)</button>
+                <button id="tab-absent" class="font-headline-md text-headline-md pb-2 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-all font-semibold focus:outline-none">Absent (0)</button>
+              </div>
+            </div>
+            
+            <!-- Live Roll Call Activity Feed -->
+            <div class="flex-grow space-y-3 overflow-y-auto max-h-[360px] pr-2 custom-scrollbar" id="roll-call-feed">
+              <!-- Loading State -->
+              <div class="text-center py-8 text-on-surface-variant font-body-sm" id="roll-call-loading">
+                <span class="material-symbols-outlined animate-spin mb-2 block">progress_activity</span>
+                Loading roster...
+              </div>
+            </div>
+            
+            <!-- Close Session Action Button -->
+            <button id="btn-close-session" class="w-full py-4 bg-error text-on-error rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-colors shadow-lg active:scale-95">
+              <span class="material-symbols-outlined">cancel</span>
+              <span>Close Attendance</span>
+            </button>
+          </div>
+        </div>
+        
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest border-t border-surface-variant mt-auto">
+      <p class="font-body-sm text-body-sm text-on-surface-variant" id="footer-text">© 2026 College Smart Attendance System. Academic Modernist Design.</p>
+      <div class="flex gap-6">
+        <a class="text-on-surface-variant font-body-sm hover:text-primary transition-opacity underline decoration-transparent hover:decoration-primary" href="#">Privacy Policy</a>
+        <a class="text-on-surface-variant font-body-sm hover:text-primary transition-opacity underline decoration-transparent hover:decoration-primary" href="#">Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Required scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/js/components.js"></script>
+
+  <script type="module">
+    import { api } from '/js/api.js?v=2.2';
+    import { getCurrentUser, logout } from '/js/auth.js?v=2.2';
+    import { getSetting, formatDate } from '/js/utils.js?v=2.2';
+    import { refreshCode, closeSession } from '/js/sessions.js?v=2.2';
+
+    // Parse URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('id');
+
+    // UI elements
+    const codeDisplay = document.getElementById('attendance-code');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const timerText = document.getElementById('timer-text');
+    const timerBar = document.getElementById('timer-bar');
+    const liveCounter = document.getElementById('live-present-counter');
+    const rollCallFeed = document.getElementById('roll-call-feed');
+    const btnCloseSession = document.getElementById('btn-close-session');
+    const sessionHallLabel = document.getElementById('session-hall-label');
+    const instructorName = document.getElementById('instructor-name');
+    const sessionHallName = document.getElementById('session-hall-name');
+    const sessionSlotName = document.getElementById('session-slot-name');
+    const statusPulseDot = document.getElementById('status-pulse-dot');
+    const statusPulseDotPing = document.getElementById('status-pulse-dot-ping');
+    const sessionStatusText = document.getElementById('session-status-text');
+
+    const tabPresent = document.getElementById('tab-present');
+    const tabAbsent = document.getElementById('tab-absent');
+
+    let activeSession = null;
+    let pollInterval = null;
+    let countdownInterval = null;
+    let totalSessionDurationMs = 5 * 60 * 1000; // default 5m in milliseconds
+    let activeTab = 'present'; // 'present' or 'absent'
+
+    // Dynamic settings loading
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          document.getElementById('header-college-name').textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}. Academic Modernist Design.`;
+        }
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+    loadSettings();
+
+    // User logout handler
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      window.components.confirmDialog({
+        title: 'Sign Out',
+        message: 'Are you sure you want to log out from the faculty portal?',
+        confirmLabel: 'Sign Out',
+        cancelLabel: 'Cancel'
+      }).then((result) => {
+        if (result) logout();
+      });
+    });
+
+    // Wire up Present / Absent Tabs Switcher
+    tabPresent.addEventListener('click', () => {
+      activeTab = 'present';
+      tabPresent.className = 'font-headline-md text-headline-md pb-2 border-b-2 border-primary text-primary transition-all font-bold focus:outline-none';
+      tabAbsent.className = 'font-headline-md text-headline-md pb-2 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-all font-semibold focus:outline-none';
+      updateRollCall();
+    });
+
+    tabAbsent.addEventListener('click', () => {
+      activeTab = 'absent';
+      tabAbsent.className = 'font-headline-md text-headline-md pb-2 border-b-2 border-primary text-primary transition-all font-bold focus:outline-none';
+      tabPresent.className = 'font-headline-md text-headline-md pb-2 border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-all font-semibold focus:outline-none';
+      updateRollCall();
+    });
+
+    /**
+     * Reconciles and initializes the session state on page load.
+     */
+    async function initializeSession() {
+      if (!sessionId) {
+        window.utils.showError('Session ID is missing in the URL.');
+        setTimeout(() => window.location.href = '/faculty/dashboard.html', 1500);
+        return;
+      }
+
+      try {
+        // Fetch session row from DB
+        const { data: session, error } = await api.Sessions.findById(sessionId);
+
+        if (error || !session) {
+          window.utils.showError('Attendance session not found.');
+          setTimeout(() => window.location.href = '/faculty/dashboard.html', 1500);
+          return;
+        }
+
+        activeSession = session;
+        totalSessionDurationMs = new Date(session.end_time) - new Date(session.start_time);
+
+        // Update basic headers
+        sessionHallLabel.textContent = `${session.lecture_hall} Attendance Session`;
+        sessionHallName.textContent = session.lecture_hall;
+        sessionSlotName.textContent = `Slot ${session.session_label}`;
+        codeDisplay.textContent = session.attendance_code;
+
+        // Fetch instructor name
+        const user = await getCurrentUser();
+        if (user) {
+          instructorName.textContent = user.name;
+        }
+
+        // Check if session is already closed or expired
+        if (session.status === 'closed') {
+          showClosedUI('CLOSED');
+          await updateRollCall();
+          return;
+        }
+
+        const now = new Date();
+        const endTime = new Date(session.end_time);
+
+        if (now >= endTime) {
+          window.utils.showInfo('Session expired. Processing auto-absent marks...');
+          await closeSession(sessionId);
+          showClosedUI('EXPIRED');
+          await updateRollCall();
+          return;
+        }
+
+        // Session is active and unexpired! Initialize timer and roll call
+        startVisualTimer(endTime);
+        startRollCallPolling();
+
+      } catch (err) {
+        console.error('Initialization error:', err);
+        window.utils.showError('Unable to load session data.');
+      }
+    }
+
+    /**
+     * Start the countdown timer UI.
+     */
+    function startVisualTimer(endTime) {
+      clearInterval(countdownInterval);
+
+      const updateUI = () => {
+        const msRemaining = endTime - Date.now();
+
+        if (msRemaining <= 0) {
+          clearInterval(countdownInterval);
+          handleSessionExpired();
+          return;
+        }
+
+        // Format time
+        const totalSecs = Math.floor(msRemaining / 1000);
+        const mins = Math.floor(totalSecs / 60);
+        const secs = totalSecs % 60;
+        timerText.textContent = `Expires in ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+        // Compute percentage remaining
+        const pct = Math.max(0, Math.min(100, (msRemaining / totalSessionDurationMs) * 100));
+        timerBar.style.width = `${pct}%`;
+
+        // Turn red in last 60 seconds
+        if (totalSecs <= 60) {
+          timerBar.className = 'h-full bg-error transition-all duration-300';
+          timerText.className = 'text-label-md font-label-md text-error animate-pulse';
+        } else {
+          timerBar.className = 'h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300';
+          timerText.className = 'text-label-md font-label-md text-on-surface';
+        }
+      };
+
+      updateUI();
+      countdownInterval = setInterval(updateUI, 1000);
+    }
+
+    /**
+     * Triggers when the countdown expires.
+     */
+    async function handleSessionExpired() {
+      clearInterval(pollInterval);
+      window.utils.showInfo('Time limit reached. Closing session...');
+      try {
+        await closeSession(sessionId);
+        showClosedUI('EXPIRED');
+        await updateRollCall();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    /**
+     * Configures UI to reflect a closed or expired session state.
+     */
+    function showClosedUI(reason) {
+      clearInterval(countdownInterval);
+      clearInterval(pollInterval);
+
+      // Status Badge
+      statusPulseDot.className = 'w-2 h-2 rounded-full bg-error';
+      if (statusPulseDotPing) statusPulseDotPing.classList.add('hidden');
+      sessionStatusText.textContent = reason === 'EXPIRED' ? 'SESSION EXPIRED' : 'SESSION CLOSED';
+      
+      // Timer text & bar
+      timerText.textContent = reason === 'EXPIRED' ? 'Code Expired (Session Over)' : 'Session Closed';
+      timerText.className = 'text-label-md font-label-md text-error';
+      timerBar.style.width = '0%';
+      timerBar.className = 'h-full bg-error';
+
+      // Code Display
+      codeDisplay.className = 'text-6xl md:text-8xl font-display-lg tracking-[0.2em] text-outline line-through select-none opacity-50 font-bold';
+      
+      // Buttons
+      refreshBtn.disabled = true;
+      refreshBtn.classList.add('opacity-40', 'cursor-not-allowed');
+      
+      btnCloseSession.disabled = true;
+      btnCloseSession.className = 'w-full py-4 bg-outline-variant text-on-surface-variant rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed opacity-50';
+      btnCloseSession.innerHTML = `<span class="material-symbols-outlined">check_circle</span> <span>Session Closed Successfully</span>`;
+    }
+
+    /**
+     * Periodically queries roll call details (every 5 seconds).
+     */
+    function startRollCallPolling() {
+      updateRollCall();
+      pollInterval = setInterval(updateRollCall, 5000);
+    }
+
+    /**
+     * Query roll call records and update counters + roll list dynamically.
+     */
+    async function updateRollCall() {
+      if (!activeSession) return;
+      
+      try {
+        // A. Fetch all active students in the session's lecture hall
+        const { data: allStudents, error: studentsError } = await api.Students.list({
+          hall: activeSession.lecture_hall,
+          isActive: true,
+          limit: 1000
+        });
+
+        if (studentsError) throw studentsError;
+
+        // B. Fetch session present records
+        const { data: records, error: recordsError } = await api.Records.bySession(sessionId);
+        
+        if (recordsError) throw recordsError;
+
+        // C. Map present student UUIDs
+        const presentRecordsMap = new Map();
+        if (records) {
+          records.forEach(r => {
+            if (r.status === 'P') {
+              presentRecordsMap.set(r.student_id, r);
+            }
+          });
+        }
+
+        // D. Differentiate present vs absent lists
+        const presentList = [];
+        const absentList = [];
+
+        if (allStudents) {
+          allStudents.forEach(s => {
+            if (presentRecordsMap.has(s.id)) {
+              presentList.push({
+                student: s,
+                record: presentRecordsMap.get(s.id)
+              });
+            } else {
+              absentList.push(s);
+            }
+          });
+        }
+
+        // E. Update UI counters and tab text counts
+        tabPresent.textContent = `Present (${presentList.length})`;
+        tabAbsent.textContent = `Absent (${absentList.length})`;
+        if (liveCounter) {
+          liveCounter.textContent = presentList.length;
+        }
+
+        // F. Render active tab feed list
+        let feedHtml = '';
+
+        if (activeTab === 'present') {
+          if (presentList.length === 0) {
+            rollCallFeed.innerHTML = `
+              <div class="text-center py-12 text-on-surface-variant font-body-sm">
+                <span class="material-symbols-outlined text-[32px] text-outline mb-2 block">person_search</span>
+                No check-ins recorded yet.
+              </div>
+            `;
+            return;
+          }
+
+          presentList.forEach(item => {
+            const s = item.student;
+            const rec = item.record;
+            const initials = s.student_name ? s.student_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'ST';
+            const timeString = rec.marked_at ? window.utils.formatTime(rec.marked_at) : '';
+
+            feedHtml += `
+              <div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-xl border border-outline-variant transition-all hover:shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-tertiary-container/10 text-tertiary flex items-center justify-center font-bold text-xs">
+                    ${initials}
+                  </div>
+                  <div class="flex flex-col text-left">
+                    <span class="text-body-sm font-semibold">${s.student_name}</span>
+                    <span class="text-[10px] text-outline font-mono uppercase">${s.roll_number}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="hidden sm:flex flex-col items-end text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-tertiary-container/10 text-tertiary text-[10px] font-bold">PRESENT</span>
+                    <span class="text-[9px] text-outline">${timeString}</span>
+                  </div>
+                  <button class="px-3 h-8 bg-error text-white rounded-full font-label-sm text-xs flex items-center justify-center gap-1 hover:opacity-90 active:scale-95 transition-all shadow-sm shadow-error/10" onclick="triggerManualOverride('${s.id}', '${s.student_name}', 'A')" title="Mark student Absent">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                    <span>Mark Absent</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          // Absent tab
+          if (absentList.length === 0) {
+            rollCallFeed.innerHTML = `
+              <div class="text-center py-12 text-on-surface-variant font-body-sm">
+                <span class="material-symbols-outlined text-[32px] text-outline mb-2 block">sentiment_satisfied</span>
+                All students present!
+              </div>
+            `;
+            return;
+          }
+
+          absentList.forEach(s => {
+            const initials = s.student_name ? s.student_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'ST';
+
+            feedHtml += `
+              <div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-xl border border-outline-variant transition-all hover:shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-error-container/10 text-error flex items-center justify-center font-bold text-xs">
+                    ${initials}
+                  </div>
+                  <div class="flex flex-col text-left">
+                    <span class="text-body-sm font-semibold">${s.student_name}</span>
+                    <span class="text-[10px] text-outline font-mono uppercase">${s.roll_number}</span>
+                  </div>
+                </div>
+                <div>
+                  <button class="px-3 h-8 bg-tertiary text-white rounded-full font-label-sm text-xs flex items-center justify-center gap-1 hover:opacity-90 active:scale-95 transition-all shadow-sm shadow-tertiary/10" onclick="triggerManualOverride('${s.id}', '${s.student_name}', 'P')" title="Mark student Present">
+                    <span class="material-symbols-outlined text-sm">check</span>
+                    <span>Mark Present</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        rollCallFeed.innerHTML = feedHtml;
+
+      } catch (err) {
+        console.error('Rollcall error:', err);
+      }
+    }
+
+    // Expose triggerManualOverride globally
+    window.triggerManualOverride = function(studentId, studentName, targetStatus) {
+      const isPresent = targetStatus === 'P';
+      window.components.confirmDialog({
+        title: isPresent ? 'Mark Student Present?' : 'Mark Student Absent?',
+        message: isPresent 
+          ? `Mark student "${studentName}" Present manually for this session? This action will sync summaries and audit records.`
+          : `Mark student "${studentName}" Absent manually for this session? This action will sync summaries and audit records.`,
+        confirmLabel: isPresent ? 'Mark Present' : 'Mark Absent',
+        confirmClass: isPresent ? 'primary' : 'destructive',
+        cancelLabel: 'Cancel'
+      }).then(async (confirmed) => {
+        if (confirmed) {
+          window.utils.showLoader('Recording override...');
+          try {
+            const { error } = await api.RPC.overrideStudentAttendance(
+              sessionId, 
+              studentId, 
+              targetStatus,
+              'Manual instructor override'
+            );
+            window.utils.hideLoader();
+            if (error) throw error;
+            window.utils.showSuccess(`${studentName} marked ${isPresent ? 'present' : 'absent'}.`);
+            updateRollCall();
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.handleError(err, 'Failed to apply manual override.');
+          }
+        }
+      });
+    };
+
+    // Refresh Code click handler
+    refreshBtn.addEventListener('click', async () => {
+      window.utils.showInfo('Regenerating code...');
+      refreshBtn.querySelector('span').classList.add('animate-spin');
+
+      try {
+        const newCode = await refreshCode(sessionId);
+        codeDisplay.textContent = newCode;
+        
+        window.utils.showSuccess('Attendance code refreshed successfully!');
+        
+        setTimeout(() => {
+          refreshBtn.querySelector('span').classList.remove('animate-spin');
+        }, 500);
+
+      } catch (err) {
+        refreshBtn.querySelector('span').classList.remove('animate-spin');
+        window.utils.handleError(err, 'Failed to refresh code.');
+      }
+    });
+
+    // Close Session click handler
+    btnCloseSession.addEventListener('click', () => {
+      window.components.confirmDialog({
+        title: 'Close Attendance Session',
+        message: 'This will lock the attendance slot immediately. All remaining students in the lecture hall will be marked Absent. This action cannot be undone.',
+        confirmLabel: 'Close Session',
+        cancelLabel: 'Cancel'
+      }).then(async (result) => {
+        if (result) {
+          window.utils.showLoader('Closing session...');
+          try {
+            const report = await closeSession(sessionId);
+            window.utils.hideLoader();
+            window.utils.showSuccess(`Session closed. ${report.absent_marked} students marked Absent.`);
+            
+            showClosedUI('CLOSED');
+            
+            // Reload activeSession status representation
+            const { data: updatedSession } = await api.Sessions.findById(sessionId);
+            if (updatedSession) {
+              activeSession = updatedSession;
+            }
+            
+            await updateRollCall();
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.showError('Failed to close session.');
+          }
+        }
+      });
+    });
+
+    // Run initialization
+    initializeSession();
+  </script>
+</body>
+</html>

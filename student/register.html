@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Student Registration - SmartAttend</title>
+  <meta http-equiv="refresh" content="0; url=/student/index.html" />
+  <script>
+    window.location.href = "/student/index.html";
+  </script>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "md": "16px",
+            "2xl": "48px",
+            "max-width": "1280px",
+            "margin-mobile": "16px",
+            "gutter": "16px",
+            "xl": "32px",
+            "margin-desktop": "32px",
+            "base": "4px",
+            "lg": "24px",
+            "sm": "8px",
+            "xs": "4px"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Geist"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-sm": ["Geist"],
+            "display-lg": ["Geist"],
+            "label-md": ["Geist"],
+            "body-md": ["Inter"],
+            "headline-md": ["Geist"],
+            "headline-lg": ["Geist"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+          }
+        },
+      }
+    }
+  </script>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+
+  <!-- Top App Bar with Public Navigation (Requirement Phase 2) -->
+  <header class="bg-surface shadow-sm sticky top-0 z-50">
+    <div class="max-w-max-width mx-auto flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-4 gap-4">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='/student/index.html'">
+        <span class="material-symbols-outlined text-primary text-[32px]">school</span>
+        <h1 class="font-headline-md text-headline-md font-bold text-primary" id="header-college-name">SmartAttend</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center px-margin-mobile py-xl md:py-2xl">
+    <div class="w-full max-w-[560px]">
+      
+      <!-- Registration Form Card -->
+      <div class="bg-surface-container-lowest p-lg md:p-xl rounded-[24px] border border-outline-variant soft-bloom transition-all duration-500" id="registration-card">
+        <div class="mb-xl">
+          <h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Student Registration</h1>
+          <p class="text-on-surface-variant font-body-md">Enter student details to initialize their academic profile.</p>
+        </div>
+        
+        <form class="space-y-lg" id="student-form" novalidate>
+          <!-- Name Field -->
+          <div class="space-y-base">
+            <label class="font-label-md text-label-md text-on-surface-variant block" for="student-name">Student Name *</label>
+            <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="student-name" placeholder="e.g. Ravi Kumar" required type="text"/>
+            <span class="text-xs text-error hidden" id="error-name">Invalid name format. Letters and spaces only (2-100 characters).</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <!-- Mobile Field -->
+            <div class="space-y-base">
+              <label class="font-label-md text-label-md text-on-surface-variant block" for="mobile-number">Mobile Number *</label>
+              <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="mobile-number" placeholder="10-digit mobile number" required type="tel" maxlength="10"/>
+              <span class="text-xs text-error hidden" id="error-mobile">Invalid format. Exactly 10 digits starting with 6-9.</span>
+              <span class="text-xs text-error hidden" id="error-mobile-duplicate">This mobile number is already registered. Please use Student Login.</span>
+            </div>
+            
+            <!-- Roll Number Field (R6 Optional) -->
+            <div class="space-y-base">
+              <label class="font-label-md text-label-md text-on-surface-variant block" for="roll-number">University Roll Number (Optional)</label>
+              <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="roll-number" placeholder="e.g. 2026CS1042" type="text"/>
+            </div>
+          </div>
+
+          <!-- Lecture Hall (R8 dropdown) -->
+          <div class="space-y-base">
+            <label class="font-label-md text-label-md text-on-surface-variant block" for="lecture-hall">Lecture Hall *</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">meeting_room</span>
+              <select class="w-full h-[48px] pl-[48px] pr-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md bg-white appearance-none" id="lecture-hall" required>
+                <option disabled selected value="">Select Lecture Hall</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+            </div>
+            <span class="text-xs text-error hidden" id="error-hall">Please select a lecture hall.</span>
+          </div>
+
+          <div class="pt-md">
+            <button id="btn-submit" class="w-full h-[52px] registration-gradient text-white font-label-md text-label-md rounded-full shadow-lg hover:shadow-primary-container/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+              <span>Register Student</span>
+              <span class="material-symbols-outlined text-[20px]">person_add</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Success State Card (Hidden by default) -->
+      <div class="hidden bg-surface-container-lowest p-lg md:p-xl rounded-[24px] border border-outline-variant soft-bloom animate-fade-in text-center" id="success-card">
+        <div class="mb-lg flex justify-center">
+          <div class="w-20 h-20 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-tertiary text-[40px]">check_circle</span>
+          </div>
+        </div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Registration Successful!</h2>
+        <p class="text-on-surface-variant font-body-md mb-xl">The student profile has been created. Redirecting to attendance in <span id="countdown-redirect">3</span> seconds...</p>
+        
+        <div class="bg-surface-container-low rounded-2xl p-lg mb-xl border border-outline-variant">
+          <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider mb-xs">Generated Student ID</span>
+          <span class="font-display-lg text-display-lg text-primary block" id="display-id">STU000000</span>
+        </div>
+        
+        <div class="flex flex-col gap-md">
+          <button class="w-full h-[52px] bg-primary text-white font-label-md text-label-md rounded-full active:scale-[0.98] transition-all flex items-center justify-center gap-2" id="btn-attendance">
+            <span>Proceed to Attendance Now</span>
+            <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+          </button>
+          <button class="w-full h-[52px] bg-transparent border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-full hover:bg-surface-container transition-all" id="btn-reset">
+            Register Another Student
+          </button>
+        </div>
+      </div>
+
+
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-surface-variant bg-surface-container-lowest">
+    <p class="font-body-sm text-body-sm text-on-surface-variant" id="footer-text">© 2026 College Smart Attendance System. Academic Modernist Design.</p>
+    <div class="flex gap-xl">
+      <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">Privacy Policy</a>
+      <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">Support</a>
+      <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary" href="#">System Status</a>
+    </div>
+  </footer>
+
+  <!-- Required scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  
+  <script type="module">
+    import { createStudent, checkMobileDuplicate } from '/js/students.js';
+    import { getSetting } from '/js/utils.js';
+
+    const form = document.getElementById('student-form');
+    const regCard = document.getElementById('registration-card');
+    const successCard = document.getElementById('success-card');
+    const displayId = document.getElementById('display-id');
+    const resetBtn = document.getElementById('btn-reset');
+    const proceedBtn = document.getElementById('btn-attendance');
+    const countdownEl = document.getElementById('countdown-redirect');
+    const submitBtn = document.getElementById('btn-submit');
+
+    // Inputs
+    const nameInput = document.getElementById('student-name');
+    const mobileInput = document.getElementById('mobile-number');
+    const rollInput = document.getElementById('roll-number');
+    const hallSelect = document.getElementById('lecture-hall');
+
+    // Error messages
+    const errorName = document.getElementById('error-name');
+    const errorMobile = document.getElementById('error-mobile');
+    const errorMobileDuplicate = document.getElementById('error-mobile-duplicate');
+    const errorHall = document.getElementById('error-hall');
+
+    let redirectTimer = null;
+
+    // Load College Name and dynamic lecture halls
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          document.getElementById('header-college-name').textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}. Academic Modernist Design.`;
+        }
+
+        const activeHalls = await window.utils.getActiveLectureHalls();
+        hallSelect.innerHTML = '<option disabled selected value="">Select Lecture Hall</option>';
+        activeHalls.forEach(hall => {
+          const opt = document.createElement('option');
+          opt.value = hall.id;
+          opt.textContent = hall.name;
+          hallSelect.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+    loadSettings();
+
+    // Indian mobile number validation helper
+    function isValidMobile(mobile) {
+      return /^[6-9]\d{9}$/.test(mobile);
+    }
+
+    // Student Name format validation helper (letters, spaces, dots, hyphens only, 2-100 characters)
+    function isValidName(name) {
+      return /^[a-zA-Z\s.\-]{2,100}$/.test(name);
+    }
+
+    // Debounced Duplicate Mobile Check
+    let debounceTimeout;
+    mobileInput.addEventListener('input', () => {
+      errorMobile.classList.add('hidden');
+      errorMobileDuplicate.classList.add('hidden');
+      
+      const val = mobileInput.value.replace(/\D/g, ''); // Numeric only
+      mobileInput.value = val;
+
+      if (val.length === 10) {
+        if (!isValidMobile(val)) {
+          errorMobile.classList.remove('hidden');
+          return;
+        }
+        
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(async () => {
+          window.utils.setLoading(submitBtn, true, 'Verifying number...');
+          const isDuplicate = await checkMobileDuplicate(val);
+          window.utils.setLoading(submitBtn, false);
+          
+          if (isDuplicate) {
+            errorMobileDuplicate.classList.remove('hidden');
+            mobileInput.classList.add('border-error');
+          } else {
+            mobileInput.classList.remove('border-error');
+          }
+        }, 400);
+      }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Clear errors
+      errorName.classList.add('hidden');
+      errorMobile.classList.add('hidden');
+      errorMobileDuplicate.classList.add('hidden');
+      errorHall.classList.add('hidden');
+
+      let hasErrors = false;
+
+      // Validate inputs
+      const name = nameInput.value.trim();
+      const mobile = mobileInput.value.trim();
+      const hall = hallSelect.value;
+      const rollNumber = rollInput.value.trim();
+
+      if (!isValidName(name)) {
+        errorName.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (!isValidMobile(mobile)) {
+        errorMobile.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (!hall) {
+        errorHall.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (hasErrors) return;
+
+      try {
+        window.utils.showLoader('Registering student...');
+        
+        // Final duplicate check immediately before creation
+        const isDuplicate = await checkMobileDuplicate(mobile);
+        if (isDuplicate) {
+          window.utils.hideLoader();
+          errorMobileDuplicate.classList.remove('hidden');
+          mobileInput.focus();
+          return;
+        }
+
+        // Create the student
+        const student = await createStudent({
+          name,
+          mobile,
+          hall,
+          rollNumber
+        });
+
+        window.utils.hideLoader();
+        window.utils.showSuccess('Student registered successfully!');
+
+        // Render success card
+        displayId.innerText = student.student_id;
+        regCard.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+        
+        setTimeout(() => {
+          regCard.classList.add('hidden');
+          successCard.classList.remove('hidden');
+          
+          // Trigger redirect timer
+          let seconds = 3;
+          countdownEl.textContent = seconds;
+          
+          redirectTimer = setInterval(() => {
+            seconds--;
+            countdownEl.textContent = seconds;
+            if (seconds <= 0) {
+              clearInterval(redirectTimer);
+              window.location.href = `/student/attendance.html?mobile=${mobile}`;
+            }
+          }, 1000);
+        }, 300);
+
+      } catch (err) {
+        window.utils.hideLoader();
+        window.utils.handleError(err, 'Registration failed. Please try again.');
+      }
+    });
+
+    // Reset Form
+    resetBtn.addEventListener('click', () => {
+      clearInterval(redirectTimer);
+      successCard.classList.add('hidden');
+      regCard.classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+      form.reset();
+      mobileInput.classList.remove('border-error');
+    });
+
+    // Proceed to Attendance
+    proceedBtn.addEventListener('click', () => {
+      clearInterval(redirectTimer);
+      const mobile = mobileInput.value.trim();
+      window.location.href = `/student/attendance.html?mobile=${mobile}`;
+    });
+
+    // Simple interaction micro-animations
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        input.parentElement.classList.add('scale-[1.005]');
+      });
+      input.addEventListener('blur', () => {
+        input.parentElement.classList.remove('scale-[1.005]');
+      });
+    });
+  </script>
+</body>
+</html>

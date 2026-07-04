@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartAttend | Secure Portal</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Geist & Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Shared Component Configuration (Tailwind) -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-container-high": "#e6e8ea",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary": "#3525cd",
+                    "surface-container": "#eceef0",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#006e4b",
+                    "surface-bright": "#f7f9fb",
+                    "secondary-fixed-dim": "#c0c1ff",
+                    "error": "#ba1a1a",
+                    "tertiary": "#005338",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#e1e0ff",
+                    "on-surface-variant": "#464555",
+                    "primary-fixed": "#e2dfff",
+                    "surface-container-low": "#f2f4f6",
+                    "on-surface": "#191c1e",
+                    "surface-tint": "#4d44e3",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#2f2ebe",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary-fixed": "#07006c",
+                    "secondary-container": "#6063ee",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary": "#4648d4",
+                    "on-primary-fixed": "#0f0069",
+                    "on-tertiary-fixed": "#002113",
+                    "on-primary-container": "#dad7ff",
+                    "outline": "#777587",
+                    "surface": "#f7f9fb",
+                    "primary-container": "#4f46e5",
+                    "surface-dim": "#d8dadc",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#67f4b7",
+                    "inverse-primary": "#c3c0ff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1e",
+                    "background": "#f7f9fb",
+                    "on-secondary-container": "#fffbff",
+                    "outline-variant": "#c7c4d8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "2xl": "48px",
+                    "max-width": "1280px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "xl": "32px",
+                    "margin-desktop": "32px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "sm": "8px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-sm": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "label-md": ["Geist"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Geist"],
+                    "headline-lg": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 1);
+        }
+        .academic-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+        }
+        .tab-active {
+            color: #3525cd;
+            border-bottom: 2px solid #3525cd;
+        }
+        /* Mobile safe area padding */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-margin-mobile">
+<!-- Top Navigation Bar (Partial / Logo only for Login) -->
+<header class="w-full max-w-max-width fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 bg-surface/80 backdrop-blur-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="school">school</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h1>
+</div>
+<div class="hidden md:block">
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">System Status</button>
+</div>
+</header>
+<!-- Main Content Area: Login Bento/Card -->
+<main class="w-full max-w-[480px] mt-16 md:mt-0">
+<!-- Animated Background Element (Subtle Shader) -->
+<div class="fixed inset-0 -z-10 opacity-30">
+
+</div>
+<div class="glass-card rounded-[24px] p-lg shadow-lg flex flex-col gap-xl">
+<!-- Header Section -->
+<div class="text-center flex flex-col gap-base">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Secure Access</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-md">Welcome back. Please select your role and enter your credentials to manage the academic portal.</p>
+</div>
+<!-- Role Selection Toggle -->
+<div class="flex bg-surface-container-low rounded-full p-1 relative border border-outline-variant">
+<button class="flex-1 py-3 font-label-md text-label-md rounded-full transition-all duration-300 z-10 text-on-primary bg-primary shadow-sm" data-role="faculty" id="btn-faculty" onclick="toggleRole('faculty')">
+                    Faculty
+                </button>
+<button class="flex-1 py-3 font-label-md text-label-md rounded-full transition-all duration-300 z-10 text-on-surface-variant" data-role="admin" id="btn-admin" onclick="toggleRole('admin')">
+                    Administrator
+                </button>
+</div>
+<!-- Login Form -->
+<form class="flex flex-col gap-lg" id="loginForm" onsubmit="return handleLogin(event)">
+<div class="flex flex-col gap-md">
+<!-- Username Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant pl-1" for="username" id="username-label">Faculty ID</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="person">person</span>
+<input class="w-full h-12 pl-12 pr-4 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-body-md text-body-md" id="username" name="username" placeholder="Enter your ID" required="" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant pl-1" for="password">Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="lock">lock</span>
+<input class="w-full h-12 pl-12 pr-12 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-body-md text-body-md" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" data-icon="visibility" id="pw-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Forgot Password -->
+<div class="flex justify-end px-1">
+<a class="font-label-md text-label-md text-primary hover:underline transition-all" href="#">Forgot password?</a>
+</div>
+<!-- Login Button -->
+<button class="academic-gradient w-full h-14 rounded-full font-label-md text-label-md text-on-primary font-bold shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                    Access Portal
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Institutional Trust Indicator -->
+<div class="flex flex-col items-center gap-sm pt-md border-t border-surface-variant">
+<div class="flex items-center gap-2 text-outline-variant">
+<span class="material-symbols-outlined" data-icon="verified_user" style="font-size: 16px;">verified_user</span>
+<span class="font-body-sm text-[12px]">Encrypted Enterprise Security</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full max-w-max-width py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 fixed bottom-0 left-0 right-0">
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">
+            © 2024 College Smart Attendance System. Academic Modernist Design.
+        </p>
+<div class="flex gap-md">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-opacity underline" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-opacity underline" href="#">Support</a>
+</div>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        let currentRole = 'faculty';
+
+        function toggleRole(role) {
+            const btnFaculty = document.getElementById('btn-faculty');
+            const btnAdmin = document.getElementById('btn-admin');
+            const label = document.getElementById('username-label');
+            const input = document.getElementById('username');
+
+            if (role === 'admin') {
+                btnAdmin.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+                btnAdmin.classList.remove('text-on-surface-variant');
+                btnFaculty.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+                btnFaculty.classList.add('text-on-surface-variant');
+                label.innerText = 'Admin Username';
+                input.placeholder = 'Enter Admin ID';
+            } else {
+                btnFaculty.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+                btnFaculty.classList.remove('text-on-surface-variant');
+                btnAdmin.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+                btnAdmin.classList.add('text-on-surface-variant');
+                label.innerText = 'Faculty ID';
+                input.placeholder = 'Enter your ID';
+            }
+            currentRole = role;
+        }
+
+        function togglePassword() {
+            const pwInput = document.getElementById('password');
+            const icon = document.getElementById('pw-toggle-icon');
+            if (pwInput.type === 'password') {
+                pwInput.type = 'text';
+                icon.innerText = 'visibility_off';
+            } else {
+                pwInput.type = 'password';
+                icon.innerText = 'visibility';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const btn = event.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            // UI Feedback
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Authenticating...`;
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+
+            // Simulate Network Delay
+            setTimeout(() => {
+                alert(`Redirecting to ${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)} Dashboard...`);
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+            }, 1500);
+            
+            return false;
+        }
+    </script>
+</body></html>

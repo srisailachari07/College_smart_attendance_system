@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Faculty Dashboard | SmartAttend</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px",
+            "24": "24px"
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+
+  <!-- Route Guard Check -->
+  <script type="module">
+    import { guardRoute } from '/js/auth.js?v=2.2';
+    guardRoute(['faculty', 'admin']);
+  </script>
+
+  <!-- TopAppBar (Faculty Navigation - Requirement Phase 2) -->
+  <header class="bg-surface shadow-sm sticky top-0 z-50">
+    <div class="max-w-max-width mx-auto flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-4 gap-4">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='/faculty/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-3xl">school</span>
+        <span class="font-headline-md text-headline-md font-bold text-primary" id="header-college-name">SmartAttend</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        <a class="font-label-md text-label-md text-primary font-bold transition-colors" href="/faculty/dashboard.html">Start Attendance</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="/faculty/session.html">My Active Session</a>
+        <button id="btn-logout" class="font-label-md text-label-md text-error hover:underline transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Area -->
+  <main class="flex-grow max-w-max-width w-full mx-auto p-margin-mobile md:p-margin-desktop pb-24 flex flex-col gap-lg animate-fade-in">
+    
+    <!-- Welcome Header -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-container-lowest p-6 rounded-24 border border-outline-variant shadow-sm mt-4">
+      <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface" id="welcome-message">Welcome, Faculty</h2>
+        <p class="text-on-surface-variant font-body-md" id="date-label">Today is Loading...</p>
+      </div>
+      <div class="flex items-center gap-3 p-3 bg-surface-container rounded-24" id="faculty-profile-chip">
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <p class="font-label-md text-on-surface truncate font-bold" id="user-display-name">Faculty Member</p>
+          <p class="text-xs text-on-surface-variant truncate" id="user-display-email">email@college.edu</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Bar -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-lg" id="stats-grid">
+      <!-- KPI 1 -->
+      <div class="bg-surface-container-lowest p-6 rounded-24 border border-outline-variant soft-bloom flex justify-between items-center">
+        <div>
+          <span class="font-label-sm text-on-surface-variant block uppercase tracking-wider mb-2">Registered Students</span>
+          <span class="font-display-lg text-display-lg text-primary" id="kpi-registered-students">0</span>
+          <span class="text-xs text-on-surface-variant block mt-1" id="kpi-subtitle">Select a lecture hall to view</span>
+        </div>
+        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-[32px]">group</span>
+        </div>
+      </div>
+      
+      <!-- KPI 2 -->
+      <div class="bg-surface-container-lowest p-6 rounded-24 border border-outline-variant soft-bloom flex justify-between items-center">
+        <div>
+          <span class="font-label-sm text-on-surface-variant block uppercase tracking-wider mb-2">Daily Timeframe</span>
+          <span class="font-body-lg font-bold text-on-surface block mt-2" id="current-slot-status">Select details to launch</span>
+          <span class="text-xs text-on-surface-variant block mt-1">S1-S7 Slots Daily Calendar</span>
+        </div>
+        <div class="w-14 h-14 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-[32px]">schedule</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Launch Form Card -->
+    <section class="max-w-xl">
+      <div class="bg-surface-container-lowest p-8 rounded-24 border border-outline-variant soft-bloom">
+        <h3 class="font-headline-md text-headline-md text-on-surface mb-6">Launch Attendance Session</h3>
+        <form id="launch-session-form" class="space-y-6">
+          <div class="space-y-base">
+            <label class="font-label-md text-label-md text-on-surface-variant block" for="lecture-hall">Lecture Hall *</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">meeting_room</span>
+              <select class="w-full h-[48px] pl-[48px] pr-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md bg-white appearance-none" id="lecture-hall" required>
+                <option disabled selected value="">Select Lecture Hall</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+            </div>
+          </div>
+          
+          <div class="space-y-base">
+            <label class="font-label-md text-label-md text-on-surface-variant block" for="session-slot">Session Slot *</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">schedule</span>
+              <select class="w-full h-[48px] pl-[48px] pr-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md bg-white appearance-none" id="session-slot" required>
+                <option disabled selected value="">Select Session Slot</option>
+                <option value="S1">S1</option>
+                <option value="S2">S2</option>
+                <option value="S3">S3</option>
+                <option value="S4">S4</option>
+                <option value="S5">S5</option>
+                <option value="S6">S6</option>
+                <option value="S7">S7</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-launch" class="w-full h-14 indigo-gradient text-white rounded-full font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">
+            <span>Start Attendance Session</span>
+            <span class="material-symbols-outlined">play_arrow</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Required Scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/js/components.js"></script>
+
+  <script type="module">
+    import { api } from '/js/api.js?v=2.2';
+    import { getCurrentUser, logout } from '/js/auth.js?v=2.2';
+    import { getSetting, formatDate } from '/js/utils.js?v=2.2';
+    import { startSession } from '/js/sessions.js?v=2.2';
+
+    const dateLabel = document.getElementById('date-label');
+    const userDisplayName = document.getElementById('user-display-name');
+    const userDisplayEmail = document.getElementById('user-display-email');
+    const kpiRegisteredStudents = document.getElementById('kpi-registered-students');
+    const kpiSubtitle = document.getElementById('kpi-subtitle');
+    const currentSlotStatus = document.getElementById('current-slot-status');
+    const btnLogout = document.getElementById('btn-logout');
+    
+    const launchForm = document.getElementById('launch-session-form');
+    const hallSelect = document.getElementById('lecture-hall');
+    const slotSelect = document.getElementById('session-slot');
+    const btnLaunch = document.getElementById('btn-launch');
+
+    let currentFaculty = null;
+
+    // Load settings and date
+    async function loadPageDetails() {
+      try {
+        const collegeName = await getSetting('college_name');
+        dateLabel.textContent = formatDate(new Date().toISOString());
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadPageDetails();
+
+    // Logout Click
+    btnLogout.addEventListener('click', () => {
+      window.components.confirmDialog({
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out?',
+        confirmLabel: 'Sign Out',
+        cancelLabel: 'Cancel'
+      }).then((result) => {
+        if (result) logout();
+      });
+    });
+
+    /**
+     * Initializes the dashboard, queries current user details,
+     * checks for active session recovery, and loads lecture halls.
+     */
+    async function initDashboard() {
+      try {
+        const user = await getCurrentUser();
+        if (!user) {
+          window.location.href = '/index.html';
+          return;
+        }
+
+        currentFaculty = user;
+        userDisplayName.textContent = user.name;
+        userDisplayEmail.textContent = user.email;
+
+        // Session Recovery check
+        window.utils.showLoader('Checking active sessions...');
+        const activeSess = await window.sessions.getActiveSessionForFaculty(user.id);
+        
+        if (activeSess) {
+          window.utils.hideLoader();
+          window.utils.showInfo('Resuming active session...');
+          setTimeout(() => {
+            window.location.href = `/faculty/session.html?id=${activeSess.id}`;
+          }, 800);
+          return;
+        }
+
+        // No active session: Load dynamic lecture halls for selection
+        const activeHalls = await window.utils.getActiveLectureHalls();
+        window.utils.hideLoader();
+        hallSelect.innerHTML = '<option disabled selected value="">Select Lecture Hall</option>';
+        activeHalls.forEach(hall => {
+          const opt = document.createElement('option');
+          opt.value = hall.id;
+          opt.textContent = hall.name;
+          hallSelect.appendChild(opt);
+        });
+
+      } catch (err) {
+        window.utils.hideLoader();
+        console.error('Dashboard loading error:', err);
+      }
+    }
+
+    // Dynamic KPI update when Lecture Hall is selected
+    hallSelect.addEventListener('change', async () => {
+      const selectedHall = hallSelect.value;
+      if (!selectedHall) return;
+
+      kpiSubtitle.textContent = `Students in ${selectedHall}`;
+      kpiRegisteredStudents.textContent = '...';
+
+      try {
+        const { data: count, error } = await api.Students.count({
+          hall: selectedHall,
+          isActive: true
+        });
+        if (error) throw error;
+        kpiRegisteredStudents.textContent = count || '0';
+      } catch (err) {
+        kpiRegisteredStudents.textContent = '0';
+      }
+    });
+
+    // Update timeframe status dynamically when Slot is selected
+    slotSelect.addEventListener('change', () => {
+      const selectedSlot = slotSelect.value;
+      if (!selectedSlot) return;
+      currentSlotStatus.textContent = `Slot ${selectedSlot} Selected`;
+    });
+
+    // Form submission to start a session
+    launchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const hall = hallSelect.value;
+      const slot = slotSelect.value;
+
+      if (!hall || !slot) {
+        window.utils.showWarning('Please select a lecture hall and session slot.');
+        return;
+      }
+
+      window.utils.setLoading(btnLaunch, true, 'Starting Session...');
+
+      try {
+        // Double check if there's already an active session for this Lecture Hall
+        const activeSess = await window.sessions.getActiveSession(hall);
+        if (activeSess) {
+          window.utils.setLoading(btnLaunch, false);
+          window.utils.showWarning(`There is already an active session in ${hall} (Slot ${activeSess.session_label}). Close it first.`);
+          return;
+        }
+
+        const session = await startSession({
+          label: slot,
+          hall: hall,
+          facultyId: currentFaculty.id
+        });
+
+        window.utils.setLoading(btnLaunch, false);
+        window.utils.showSuccess('Attendance session started successfully!');
+        
+        setTimeout(() => {
+          window.location.href = `/faculty/session.html?id=${session.id}`;
+        }, 600);
+
+      } catch (err) {
+        window.utils.setLoading(btnLaunch, false);
+        window.utils.handleError(err, 'Failed to start session. Please try again.');
+      }
+    });
+
+    // Run
+    initDashboard();
+  </script>
+</body>
+</html>

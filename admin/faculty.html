@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Faculty Management | SmartAttend Admin</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "24": "24px",
+            "full": "9999px"
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col lg:flex-row">
+
+  <!-- Route Guard Check -->
+  <script type="module">
+    import { guardRoute } from '/js/auth.js';
+    guardRoute(['admin']);
+  </script>
+
+  <!-- Sidebar Nav -->
+  <aside class="hidden lg:flex flex-col h-screen w-[280px] fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant py-6 z-40">
+    <div class="px-6 mb-8 flex items-center gap-3 cursor-pointer" onclick="window.location.href='/admin/dashboard.html'">
+      <span class="material-symbols-outlined text-primary text-3xl">school</span>
+      <h1 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h1>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/students.html">
+        <span class="material-symbols-outlined">group</span>
+        <span class="font-label-md text-label-md">Students</span>
+      </a>
+      <a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-full px-4 py-3 mx-2 relative sidebar-active-indicator transition-all duration-200" href="/admin/faculty.html">
+        <span class="material-symbols-outlined">supervisor_account</span>
+        <span class="font-label-md text-label-md">Faculty</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/attendance.html">
+        <span class="material-symbols-outlined">sensors</span>
+        <span class="font-label-md text-label-md">Attendance</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/reports.html">
+        <span class="material-symbols-outlined">assessment</span>
+        <span class="font-label-md text-label-md">Reports</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/settings.html">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+    </nav>
+    <div class="mt-auto px-4">
+      <div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-24">
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <p class="font-label-md text-on-surface truncate" id="admin-name">Administrator</p>
+          <p class="text-xs text-on-surface-variant truncate" id="admin-email">admin@college.edu</p>
+        </div>
+      </div>
+      <button id="btn-logout" class="w-full mt-4 py-3 border border-outline-variant text-error rounded-xl font-label-md text-label-md hover:bg-error-container/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Page Content Wrapper -->
+  <div class="flex-grow flex flex-col min-w-0 lg:pl-[280px]">
+    <!-- Top AppBar (Mobile) -->
+    <header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-30 bg-surface shadow-sm">
+      <div class="flex items-center gap-2 lg:hidden" onclick="window.location.href='/admin/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-headline-md">school</span>
+        <span class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</span>
+      </div>
+      <h2 class="font-headline-md text-headline-md text-on-surface" id="college-name-header">Faculty Directory</h2>
+      <div class="lg:hidden">
+        <button id="btn-logout-mobile" class="material-symbols-outlined p-2 text-error hover:bg-error-container/10 rounded-full">logout</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow p-margin-mobile md:p-margin-desktop pb-24 bg-background overflow-x-hidden gap-lg flex flex-col">
+      
+      <!-- Stats Grid (Bento Style) -->
+      <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter animate-fade-in">
+        <!-- Total Faculty -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-primary/10 rounded-xl">
+              <span class="material-symbols-outlined text-primary">supervisor_account</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Total Faculty</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-total-faculty">0</h4>
+          </div>
+        </div>
+        
+        <!-- Active Faculty -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-secondary/10 rounded-xl">
+              <span class="material-symbols-outlined text-secondary">check_circle</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Active Faculty</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-active-faculty">0</h4>
+          </div>
+        </div>
+        
+        <!-- Faculty Currently Taking Sessions -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-error/10 rounded-xl">
+              <span class="material-symbols-outlined text-error">sensors</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Taking Sessions</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-taking-sessions">0</h4>
+          </div>
+        </div>
+        
+        <!-- Today's Sessions -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 soft-bloom border border-outline-variant flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div class="p-3 bg-tertiary-container/10 rounded-xl">
+              <span class="material-symbols-outlined text-tertiary">calendar_today</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-on-surface-variant font-label-md">Today's Sessions</p>
+            <h4 class="text-3xl font-bold text-on-surface" id="stat-today-sessions">0</h4>
+          </div>
+        </div>
+      </section>
+
+      <!-- Controls -->
+      <section class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-container-lowest p-6 rounded-24 border border-outline-variant shadow-sm animate-fade-in">
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto flex-grow max-w-xl">
+          <!-- Status Filter -->
+          <select class="h-11 px-4 bg-surface rounded-full border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm appearance-none pr-10 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E')] bg-[length:0.65rem_auto] bg-[right_1rem_center] bg-no-repeat" id="select-status-filter">
+            <option value="true">Active Only</option>
+            <option value="false">Inactive Only</option>
+            <option value="all">All Statuses</option>
+          </select>
+        </div>
+        <div class="flex gap-2 flex-wrap flex-shrink-0">
+          <button class="h-11 px-6 border border-error/30 text-error hover:bg-error/5 font-label-md text-label-md rounded-full active:scale-95 transition-all flex items-center gap-2 hidden" id="btn-delete-selected">
+            <span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+            <span>Delete Selected</span>
+          </button>
+          <button class="gradient-btn h-11 px-6 text-on-primary font-label-md text-label-md rounded-full shadow-md active:scale-95 transition-all flex items-center gap-2 flex-shrink-0" id="btn-add-faculty">
+            <span class="material-symbols-outlined text-[20px]">person_add</span>
+            <span>Add Faculty Profile</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Faculty Table -->
+      <section class="bg-surface-container-lowest rounded-24 border border-outline-variant shadow-sm overflow-hidden flex-grow flex flex-col">
+        <div class="overflow-x-auto flex-grow min-h-[400px]">
+          <table class="w-full text-left border-collapse" id="faculty-table">
+            <thead>
+              <tr class="bg-surface border-b border-outline-variant">
+                <th class="p-4 w-12"><input type="checkbox" id="chk-select-all" class="rounded border-outline-variant focus:ring-primary text-primary cursor-pointer"/></th>
+                <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Instructor Name</th>
+                <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Faculty ID / Username</th>
+                <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Email Address</th>
+                <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+                <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/30" id="table-body">
+              <!-- Populated dynamically -->
+              <tr>
+                <td colspan="6" class="text-center py-12 text-on-surface-variant">
+                  <span class="material-symbols-outlined animate-spin text-primary text-[28px] mb-2 block">progress_activity</span>
+                  Loading faculty records...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="p-4 border-t border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-4 bg-surface" id="pagination-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Add/Edit Faculty Dialog Modal -->
+    <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm hidden flex items-center justify-center p-4" id="faculty-modal">
+      <div class="glass-card w-full max-w-[480px] rounded-[24px] p-6 shadow-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-outline-variant pb-3">
+          <h4 class="font-headline-md text-headline-md text-on-surface" id="modal-title">Add Faculty Profile</h4>
+          <button class="material-symbols-outlined p-1 hover:bg-surface-container rounded-full text-outline transition-colors" id="btn-close-modal">close</button>
+        </div>
+        
+        <form class="space-y-4" id="faculty-modal-form" novalidate>
+          <input type="hidden" id="faculty-uuid"/>
+          
+          <!-- Name -->
+          <div class="flex flex-col gap-1">
+            <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="modal-name">Faculty Name *</label>
+            <input class="w-full h-11 px-3 bg-surface-bright border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="modal-name" required placeholder="e.g. Dr. Vance"/>
+            <span class="text-xs text-error hidden" id="modal-err-name">Please enter a valid name.</span>
+          </div>
+
+          <!-- Faculty ID / Username -->
+          <div class="flex flex-col gap-1">
+            <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="modal-facid">Faculty ID (Username) *</label>
+            <input class="w-full h-11 px-3 bg-surface-bright border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="modal-facid" required placeholder="e.g. FAC001"/>
+            <span class="text-xs text-error hidden" id="modal-err-facid">ID must be alphanumeric, 3-20 chars.</span>
+          </div>
+          
+          <!-- Email -->
+          <div class="flex flex-col gap-1">
+            <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="modal-email">Email Address *</label>
+            <input class="w-full h-11 px-3 bg-surface-bright border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="modal-email" required placeholder="e.g. vance@college.edu" type="email"/>
+            <span class="text-xs text-error hidden" id="modal-err-email">Invalid email format.</span>
+          </div>
+
+          <!-- Password (Creation Only) -->
+          <div class="flex flex-col gap-1" id="modal-password-group">
+            <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="modal-password">Account Password *</label>
+            <input class="w-full h-11 px-3 bg-surface-bright border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="modal-password" placeholder="At least 6 characters" type="password"/>
+            <span class="text-xs text-error hidden" id="modal-err-password">Password must be at least 6 characters.</span>
+          </div>
+          
+          <div class="pt-4 flex gap-3 border-t border-outline-variant mt-6">
+            <button class="flex-1 h-12 border border-outline-variant text-on-surface rounded-full font-label-md active:scale-95 transition-all" type="button" id="btn-modal-cancel">Cancel</button>
+            <button class="flex-1 h-12 gradient-btn text-on-primary rounded-full font-label-md active:scale-95 transition-all shadow-md shadow-primary/10" type="submit" id="btn-modal-save">Save Profile</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest border-t border-surface-variant">
+      <p class="font-body-sm text-secondary text-sm" id="footer-text">© 2026 College Smart Attendance System. Academic Modernist Design.</p>
+      <div class="flex gap-6">
+        <a class="text-on-surface-variant hover:text-primary transition-opacity text-sm underline decoration-transparent hover:decoration-current" href="#">Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/js/components.js"></script>
+
+  <script type="module">
+    import { api } from '/js/api.js';
+    import { getCurrentUser, logout } from '/js/auth.js';
+    import { getSetting } from '/js/utils.js';
+    import { createFaculty, updateFaculty, deactivateFaculty, activateFaculty, getFacultyList, deleteFaculty } from '/js/faculty.js';
+
+    // UI state
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let totalCount = 0;
+    let selectedStatus = 'true';
+    let isEditMode = false;
+
+    // Elements
+    const tableBody = document.getElementById('table-body');
+    const paginationContainer = document.getElementById('pagination-container');
+    const selectStatusFilter = document.getElementById('select-status-filter');
+    const btnAddFaculty = document.getElementById('btn-add-faculty');
+    const headerCollegeName = document.getElementById('college-name-header');
+
+    // Admin profile elements
+    const adminName = document.getElementById('admin-name');
+    const adminEmail = document.getElementById('admin-email');
+
+    // Bento stats elements
+    const statTotalFaculty = document.getElementById('stat-total-faculty');
+    const statActiveFaculty = document.getElementById('stat-active-faculty');
+    const statTakingSessions = document.getElementById('stat-taking-sessions');
+    const statTodaySessions = document.getElementById('stat-today-sessions');
+
+    // Modal elements
+    const facultyModal = document.getElementById('faculty-modal');
+    const modalForm = document.getElementById('faculty-modal-form');
+    const modalTitle = document.getElementById('modal-title');
+    const modalUUID = document.getElementById('faculty-uuid');
+    const modalName = document.getElementById('modal-name');
+    const modalFacId = document.getElementById('modal-facid');
+    const modalEmail = document.getElementById('modal-email');
+    const modalPassword = document.getElementById('modal-password');
+    const modalPasswordGroup = document.getElementById('modal-password-group');
+    
+    // Modal errors
+    const errName = document.getElementById('modal-err-name');
+    const errFacId = document.getElementById('modal-err-facid');
+    const errEmail = document.getElementById('modal-err-email');
+    const errPassword = document.getElementById('modal-err-password');
+    const btnModalSave = document.getElementById('btn-modal-save');
+
+    // Load settings
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          headerCollegeName.textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}. Academic Modernist Design.`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadSettings();
+
+    // Hydrate admin profile
+    async function initUser() {
+      const user = await getCurrentUser();
+      if (user) {
+        if (adminName) adminName.textContent = user.name;
+        if (adminEmail) adminEmail.textContent = user.email;
+      }
+    }
+    initUser();
+
+    // Load dynamic faculty stats
+    async function loadPageStats() {
+      try {
+        const { data: stats, error } = await api.RPC.getAdminFacultyStats();
+        if (error) throw error;
+        if (stats) {
+          if (statTotalFaculty) statTotalFaculty.textContent = stats.total_faculty ?? '0';
+          if (statActiveFaculty) statActiveFaculty.textContent = stats.active_faculty ?? '0';
+          if (statTakingSessions) statTakingSessions.textContent = stats.faculty_taking_sessions ?? '0';
+          if (statTodaySessions) statTodaySessions.textContent = stats.today_sessions ?? '0';
+        }
+      } catch (err) {
+        console.error('[admin/faculty] Error loading stats:', err);
+      }
+    }
+    loadPageStats();
+
+    // Logout Click
+    function handleLogout() {
+      window.components.confirmDialog({
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out?',
+        confirmLabel: 'Sign Out',
+        cancelLabel: 'Cancel'
+      }).then((result) => {
+        if (result) logout();
+      });
+    }
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
+    document.getElementById('btn-logout-mobile').addEventListener('click', handleLogout);
+
+    /**
+     * Fetch and render faculty grid.
+     */
+    async function refreshFacultyList() {
+      // Reset select all checkbox
+      const selectAllChk = document.getElementById('chk-select-all');
+      if (selectAllChk) selectAllChk.checked = false;
+      updateDeleteSelectedButton();
+
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-12 text-on-surface-variant">
+            <span class="material-symbols-outlined animate-spin text-primary text-[28px] mb-2 block">progress_activity</span>
+            Refreshing faculty records...
+          </td>
+        </tr>
+      `;
+
+      try {
+        let isActiveParam = undefined;
+        if (selectedStatus === 'true') isActiveParam = true;
+        else if (selectedStatus === 'false') isActiveParam = false;
+
+        const result = await getFacultyList({
+          isActive: isActiveParam,
+          page: currentPage,
+          limit: itemsPerPage
+        });
+
+        const faculty = result.data;
+        totalCount = result.count || (faculty ? faculty.length : 0);
+
+        if (!faculty || faculty.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-center py-12 text-on-surface-variant font-body-sm">
+                <span class="material-symbols-outlined text-[36px] text-outline mb-2 block">supervisor_account</span>
+                No faculty members registered matching the filter.
+              </td>
+            </tr>
+          `;
+          paginationContainer.innerHTML = '';
+          return;
+        }
+
+        let tbodyHtml = '';
+        faculty.forEach(fac => {
+          const statusBadge = fac.is_active ? window.components.badge('Active', 'active') : window.components.badge('Inactive', 'closed');
+          const toggleBtn = fac.is_active ? `
+            <button class="p-2 hover:bg-error-container/10 rounded-full text-error active:scale-90 transition-transform" onclick="toggleFacultyStatus('${fac.id}', '${fac.faculty_name}', false)" title="Deactivate Account">
+              <span class="material-symbols-outlined text-[18px]">block</span>
+            </button>
+          ` : `
+            <button class="p-2 hover:bg-tertiary-container/10 rounded-full text-tertiary active:scale-90 transition-transform" onclick="toggleFacultyStatus('${fac.id}', '${fac.faculty_name}', true)" title="Activate Account">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>
+            </button>
+          `;
+
+          const resetPwdBtn = `
+            <button class="p-2 hover:bg-surface-container rounded-full text-secondary active:scale-90 transition-transform" onclick="resetFacultyPassword('${fac.email}', '${fac.faculty_name}')" title="Reset Password">
+              <span class="material-symbols-outlined text-[18px]">lock_reset</span>
+            </button>
+          `;
+
+          tbodyHtml += `
+            <tr class="hover:bg-surface-container-lowest transition-colors">
+              <td class="p-4"><input type="checkbox" class="faculty-checkbox rounded border-outline-variant focus:ring-primary text-primary cursor-pointer" data-id="${fac.id}"/></td>
+              <td class="p-4 text-body-sm font-semibold text-on-surface">${fac.faculty_name}</td>
+              <td class="p-4 text-body-sm font-mono text-on-surface-variant">${fac.faculty_id}</td>
+              <td class="p-4 text-body-sm text-on-surface-variant">${fac.email}</td>
+              <td class="p-4 text-body-sm">${statusBadge}</td>
+              <td class="p-4 text-body-sm text-right space-x-2">
+                <button class="p-2 hover:bg-surface-container rounded-full text-primary active:scale-90 transition-transform" onclick="openEditModal('${fac.id}')" title="Edit Profile">
+                  <span class="material-symbols-outlined text-[18px]">edit</span>
+                </button>
+                ${resetPwdBtn}
+                ${toggleBtn}
+                <button class="p-2 hover:bg-error-container/10 rounded-full text-error active:scale-90 transition-transform" onclick="deleteFacultyProfile('${fac.id}', '${fac.faculty_name}')" title="Delete Profile Permanently">
+                  <span class="material-symbols-outlined text-[18px]">delete</span>
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+        tableBody.innerHTML = tbodyHtml;
+
+        // Attach checkbox event listeners
+        document.querySelectorAll('.faculty-checkbox').forEach(chk => {
+          chk.addEventListener('change', updateDeleteSelectedButton);
+        });
+
+        // Pagination
+        renderPagination();
+
+      } catch (err) {
+        console.error(err);
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-12 text-error">
+              Failed to load faculty directory.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(totalCount / itemsPerPage);
+      if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+      }
+      paginationContainer.innerHTML = window.components.pagination({
+        currentPage,
+        totalPages,
+        totalCount,
+        limit: itemsPerPage,
+        onPageChange: 'changePage'
+      });
+    }
+
+    window.changePage = function(pageNumber) {
+      currentPage = pageNumber;
+      refreshFacultyList();
+    };
+
+    selectStatusFilter.addEventListener('change', (e) => {
+      selectedStatus = e.target.value;
+      currentPage = 1;
+      refreshFacultyList();
+    });
+
+    // Modal helpers
+    function toggleModal(show = true) {
+      if (show) {
+        facultyModal.classList.remove('hidden');
+      } else {
+        facultyModal.classList.add('hidden');
+        modalForm.reset();
+        modalUUID.value = '';
+        
+        // Reset errors
+        errName.classList.add('hidden');
+        errFacId.classList.add('hidden');
+        errEmail.classList.add('hidden');
+        errPassword.classList.add('hidden');
+      }
+    }
+
+    btnAddFaculty.addEventListener('click', () => {
+      isEditMode = false;
+      modalTitle.textContent = 'Add Faculty Profile';
+      modalPasswordGroup.classList.remove('hidden');
+      modalEmail.disabled = false;
+      modalFacId.disabled = false;
+      toggleModal(true);
+    });
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => toggleModal(false));
+    document.getElementById('btn-modal-cancel').addEventListener('click', () => toggleModal(false));
+
+    // Submit form logic
+    modalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      errName.classList.add('hidden');
+      errFacId.classList.add('hidden');
+      errEmail.classList.add('hidden');
+      errPassword.classList.add('hidden');
+
+      let hasErrors = false;
+      const name = modalName.value.trim();
+      const facId = modalFacId.value.trim();
+      const email = modalEmail.value.trim();
+      const password = modalPassword.value;
+
+      if (!name) {
+        errName.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (!/^[a-zA-Z0-9_\-]{3,20}$/.test(facId)) {
+        errFacId.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errEmail.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (!isEditMode && password.length < 6) {
+        errPassword.classList.remove('hidden');
+        hasErrors = true;
+      }
+
+      if (hasErrors) return;
+
+      try {
+        window.utils.setLoading(btnModalSave, true, 'Saving profile...');
+
+        if (isEditMode) {
+          const uuid = modalUUID.value;
+          await updateFaculty(uuid, {
+            faculty_name: name
+          });
+          window.utils.showSuccess('Faculty profile updated.');
+        } else {
+          // Check duplicate facId or email first
+          const { data: checkId } = await api.Faculty.findByFacultyId(facId);
+          if (checkId) {
+            window.utils.setLoading(btnModalSave, false);
+            errFacId.textContent = 'This ID is already registered.';
+            errFacId.classList.remove('hidden');
+            return;
+          }
+
+          await createFaculty({
+            name,
+            facultyId: facId,
+            email,
+            password
+          });
+          window.utils.showSuccess('Faculty account created successfully.');
+        }
+
+        window.utils.setLoading(btnModalSave, false);
+        toggleModal(false);
+        refreshFacultyList();
+        loadPageStats();
+
+      } catch (err) {
+        window.utils.setLoading(btnModalSave, false);
+        window.utils.handleError(err, 'Failed to save faculty profile. Please verify your connection.');
+      }
+    });
+
+    // Edit modal open
+    window.openEditModal = async function(uuid) {
+      isEditMode = true;
+      modalTitle.textContent = 'Edit Faculty Profile';
+      modalPasswordGroup.classList.add('hidden'); // Hide password field
+      toggleModal(true);
+      window.utils.setLoading(btnModalSave, true, 'Loading...');
+
+      try {
+        const { data: fac, error } = await api.Faculty.findById(uuid);
+        window.utils.setLoading(btnModalSave, false);
+
+        if (error || !fac) {
+          window.utils.showError('Unable to fetch profile details.');
+          toggleModal(false);
+          return;
+        }
+
+        modalUUID.value = fac.id;
+        modalName.value = fac.faculty_name;
+        modalFacId.value = fac.faculty_id;
+        modalFacId.disabled = true; // Alphanumeric username cannot be changed
+        modalEmail.value = fac.email;
+        modalEmail.disabled = true; // Email cannot be changed directly
+
+      } catch (err) {
+        window.utils.setLoading(btnModalSave, false);
+        toggleModal(false);
+      }
+    };
+
+    // Activate/Deactivate faculty member controller
+    window.toggleFacultyStatus = function(uuid, name, activate) {
+      const title = activate ? 'Restore Faculty Account' : 'Deactivate Faculty Account';
+      const message = activate 
+        ? `Are you sure you want to restore and activate the account for instructor "${name}"?`
+        : `Deactivate this faculty account?\n\nThe faculty member will no longer be able to log in or create attendance sessions. Historical attendance data will remain intact.`;
+      
+      const confirmLabel = activate ? 'Restore' : 'Deactivate';
+
+      window.components.confirmDialog({
+        title: title,
+        message: message,
+        confirmLabel: confirmLabel,
+        confirmClass: activate ? 'primary' : 'destructive',
+        cancelLabel: 'Cancel'
+      }).then(async (result) => {
+        if (result) {
+          window.utils.showLoader(activate ? 'Restoring account...' : 'Deactivating account...');
+          try {
+            if (activate) {
+              await activateFaculty(uuid);
+            } else {
+              await deactivateFaculty(uuid);
+            }
+            window.utils.hideLoader();
+            window.utils.showSuccess(activate ? `Account restored for instructor "${name}".` : `Account deactivated for instructor "${name}".`);
+            refreshFacultyList();
+            loadPageStats();
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.showError(activate ? 'Restore failed.' : 'Deactivation failed.');
+          }
+        }
+      });
+    };
+
+    // Delete faculty profile controller
+    window.deleteFacultyProfile = function(uuid, name) {
+      window.components.confirmDialog({
+        title: 'Delete Faculty Permanently?',
+        message: 'This action cannot be undone. This will permanently remove the faculty account and all associated data. Are you sure?',
+        confirmLabel: 'Delete Permanently',
+        confirmClass: 'destructive',
+        cancelLabel: 'Cancel'
+      }).then(async (result) => {
+        if (result) {
+          window.utils.showLoader('Deleting faculty account...');
+          try {
+            await deleteFaculty(uuid);
+            window.utils.hideLoader();
+            window.utils.showSuccess(`Faculty profile "${name}" permanently deleted.`);
+            refreshFacultyList();
+            loadPageStats();
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.showError(err.message || 'Permanent delete failed.');
+          }
+        }
+      });
+    };
+
+    // Reset password controller
+    window.resetFacultyPassword = function(email, name) {
+      const newPassword = prompt(`Enter new password for instructor "${name}" (At least 6 characters):`);
+      if (newPassword === null) return;
+      if (newPassword.length < 6) {
+        window.utils.showError('Password must be at least 6 characters.');
+        return;
+      }
+
+      window.utils.showLoader('Resetting password...');
+      api.Auth.resetFacultyPassword(email, newPassword).then(({ data, error }) => {
+        window.utils.hideLoader();
+        if (error) {
+          window.utils.showError('Failed to reset password.');
+        } else {
+          window.utils.showSuccess(`Password reset successfully for "${name}".`);
+        }
+      });
+    };
+
+    // Check-all functionality
+    const selectAllChk = document.getElementById('chk-select-all');
+    if (selectAllChk) {
+      selectAllChk.addEventListener('change', (e) => {
+        const checked = e.target.checked;
+        document.querySelectorAll('.faculty-checkbox').forEach(chk => {
+          chk.checked = checked;
+        });
+        updateDeleteSelectedButton();
+      });
+    }
+
+    function getSelectedFacultyIds() {
+      const ids = [];
+      document.querySelectorAll('.faculty-checkbox:checked').forEach(chk => {
+        ids.push(chk.getAttribute('data-id'));
+      });
+      return ids;
+    }
+
+    function updateDeleteSelectedButton() {
+      const selectedIds = getSelectedFacultyIds();
+      const deleteBtn = document.getElementById('btn-delete-selected');
+      if (deleteBtn) {
+        if (selectedIds.length > 0) {
+          deleteBtn.classList.remove('hidden');
+          deleteBtn.querySelector('span:last-child').textContent = `Delete Selected (${selectedIds.length})`;
+        } else {
+          deleteBtn.classList.add('hidden');
+        }
+      }
+    }
+
+    // Bulk Delete Selected Faculty Profiles Controller
+    document.getElementById('btn-delete-selected').addEventListener('click', () => {
+      const selectedIds = getSelectedFacultyIds();
+      if (selectedIds.length === 0) return;
+
+      window.components.confirmDialog({
+        title: 'Delete Selected Faculty?',
+        message: `This action CANNOT BE UNDONE. You are about to permanently delete the ${selectedIds.length} selected faculty accounts and all associated data. Historical reports will be archived. Are you sure?`,
+        confirmLabel: 'Delete Permanently',
+        confirmClass: 'destructive',
+        cancelLabel: 'Cancel'
+      }).then(async (result) => {
+        if (result) {
+          window.utils.showLoader('Deleting faculty profiles...');
+          try {
+            await window.faculty.deleteMultipleFaculty(selectedIds);
+            window.utils.hideLoader();
+            window.utils.showSuccess(`Successfully deleted ${selectedIds.length} faculty records.`);
+            refreshFacultyList();
+            loadPageStats();
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.showError('Bulk delete failed.');
+          }
+        }
+      });
+    });
+
+    // Run
+    refreshFacultyList();
+  </script>
+</body>
+</html>

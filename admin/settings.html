@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>System Settings | SmartAttend Admin</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "24": "24px",
+            "full": "9999px"
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col lg:flex-row">
+
+  <!-- Route Guard Check -->
+  <script type="module">
+    import { guardRoute } from '/js/auth.js?v=2.2';
+    guardRoute(['admin']);
+  </script>
+
+  <!-- Sidebar Nav -->
+  <aside class="hidden lg:flex flex-col h-screen w-[280px] fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant py-6 z-40">
+    <div class="px-6 mb-8 flex items-center gap-3 cursor-pointer" onclick="window.location.href='/admin/dashboard.html'">
+      <span class="material-symbols-outlined text-primary text-3xl">school</span>
+      <h1 class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</h1>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/students.html">
+        <span class="material-symbols-outlined">group</span>
+        <span class="font-label-md text-label-md">Students</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/faculty.html">
+        <span class="material-symbols-outlined">supervisor_account</span>
+        <span class="font-label-md text-label-md">Faculty</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/attendance.html">
+        <span class="material-symbols-outlined">sensors</span>
+        <span class="font-label-md text-label-md">Attendance</span>
+      </a>
+      <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-full transition-all duration-200" href="/admin/reports.html">
+        <span class="material-symbols-outlined">assessment</span>
+        <span class="font-label-md text-label-md">Reports</span>
+      </a>
+      <a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-full px-4 py-3 mx-2 relative sidebar-active-indicator transition-all duration-200" href="/admin/settings.html">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+    </nav>
+    <div class="mt-auto px-4">
+      <div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-24">
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <p class="font-label-md text-on-surface truncate" id="admin-name">Administrator</p>
+          <p class="text-xs text-on-surface-variant truncate" id="admin-email">admin@college.edu</p>
+        </div>
+      </div>
+      <button id="btn-logout" class="w-full mt-4 py-3 border border-outline-variant text-error rounded-xl font-label-md text-label-md hover:bg-error-container/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Page Content Wrapper -->
+  <div class="flex-grow flex flex-col min-w-0 lg:pl-[280px]">
+    <!-- Top AppBar (Mobile) -->
+    <header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 sticky top-0 z-30 bg-surface shadow-sm">
+      <div class="flex items-center gap-2 lg:hidden" onclick="window.location.href='/admin/dashboard.html'">
+        <span class="material-symbols-outlined text-primary text-headline-md">school</span>
+        <span class="font-headline-md text-headline-md font-bold text-primary">SmartAttend</span>
+      </div>
+      <h2 class="font-headline-md text-headline-md text-on-surface" id="college-name-header">System Settings</h2>
+      <div class="lg:hidden">
+        <button id="btn-logout-mobile" class="material-symbols-outlined p-2 text-error hover:bg-error-container/10 rounded-full">logout</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow p-margin-mobile md:p-margin-desktop pb-24 bg-background overflow-x-hidden gap-lg flex flex-col">
+      
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-lg">
+        
+        <!-- Settings Form Card -->
+        <div class="xl:col-span-2 bg-surface-container-lowest p-6 rounded-24 border border-outline-variant shadow-sm flex flex-col gap-6">
+          <div>
+            <h3 class="font-headline-md text-headline-md text-on-surface">Configuration Panel</h3>
+            <p class="text-on-surface-variant font-body-sm">Configure primary variables that run the college check-in flows.</p>
+          </div>
+          
+          <form class="space-y-4 text-left" id="settings-form" novalidate>
+            <!-- College Name -->
+            <div class="flex flex-col gap-1">
+              <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="input-college-name">Institution Name</label>
+              <input class="w-full h-11 px-3 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="input-college-name" required placeholder="e.g. Harvard University"/>
+            </div>
+            <!-- Academic Year -->
+            <div class="flex flex-col gap-1">
+              <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="input-academic-year">Academic Year</label>
+              <input class="w-full h-11 px-3 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm font-mono" id="input-academic-year" required placeholder="e.g. 2026-27"/>
+            </div>
+            <!-- Session Duration (Seconds) -->
+            <div class="flex flex-col gap-1">
+              <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="input-session-duration">Attendance Session Duration (Seconds)</label>
+              <input class="w-full h-11 px-3 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm font-mono" id="input-session-duration" required type="number" min="5" max="3600" placeholder="e.g. 300"/>
+            </div>
+            <!-- Low Attendance Threshold (%) -->
+            <div class="flex flex-col gap-1">
+              <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="input-low-threshold">Low Attendance Alert Threshold (%)</label>
+              <input class="w-full h-11 px-3 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm font-mono" id="input-low-threshold" required type="number" min="1" max="100" placeholder="e.g. 75"/>
+            </div>
+
+            <div class="pt-4 flex justify-end border-t border-outline-variant/30 mt-6">
+              <button class="h-11 px-8 gradient-btn text-on-primary rounded-full font-label-md text-label-md font-bold shadow-md active:scale-95 transition-all flex items-center gap-2" type="submit" id="btn-save-settings">
+                <span class="material-symbols-outlined">save</span>
+                <span>Save Configuration</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Lecture Halls Bento Block -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 border border-outline-variant shadow-sm flex flex-col gap-6 h-fit">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-headline-md text-headline-md text-on-surface">Lecture Halls</h3>
+              <p class="text-on-surface-variant font-body-sm">Dynamic physical rooms setup.</p>
+            </div>
+            <button class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 transition-all active:scale-90" id="btn-add-hall" title="Add Lecture Hall">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+          
+          <div class="space-y-3 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar" id="halls-list-container">
+            <!-- Dynamic lecture halls list -->
+            <div class="text-center py-6 text-on-surface-variant font-body-sm">
+              Loading halls...
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone Bento Block -->
+        <div class="bg-surface-container-lowest p-6 rounded-24 border border-error/20 shadow-sm flex flex-col gap-6 h-fit">
+          <div>
+            <h3 class="font-headline-md text-headline-md text-error flex items-center gap-2">
+              <span class="material-symbols-outlined text-[20px]">warning</span>
+              <span>Danger Zone</span>
+            </h3>
+            <p class="text-on-surface-variant font-body-sm">Destructive database maintenance actions.</p>
+          </div>
+          
+          <div class="space-y-3">
+            <button class="w-full h-11 border border-error/30 text-error hover:bg-error/5 font-label-md text-label-md rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2" id="btn-reset-students">
+              <span class="material-symbols-outlined text-[20px]">group_remove</span>
+              <span>Reset Student Roster</span>
+            </button>
+            <button class="w-full h-11 border border-error/30 text-error hover:bg-error/5 font-label-md text-label-md rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2" id="btn-reset-faculty">
+              <span class="material-symbols-outlined text-[20px]">person_remove</span>
+              <span>Reset Faculty Roster</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest border-t border-surface-variant">
+      <p class="font-body-sm text-secondary text-sm" id="footer-text">© 2026 College Smart Attendance System. Academic Modernist Design.</p>
+      <div class="flex gap-6">
+        <a class="text-on-surface-variant hover:text-primary transition-opacity text-sm underline decoration-transparent hover:decoration-current" href="#">Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/js/components.js"></script>
+  
+  <script type="module">
+    import { api } from '/js/api.js?v=2.2';
+    import { getCurrentUser, logout } from '/js/auth.js?v=2.2';
+    import { getSettings, clearSettingsCache } from '/js/utils.js?v=2.2';
+    import { resetAllStudents } from '/js/students.js?v=2.2';
+    import { resetAllFaculty } from '/js/faculty.js?v=2.2';
+
+    // Elements
+    const headerCollegeName = document.getElementById('college-name-header');
+    const adminName = document.getElementById('admin-name');
+    const adminEmail = document.getElementById('admin-email');
+
+    // Form inputs
+    const inputCollegeName = document.getElementById('input-college-name');
+    const inputAcademicYear = document.getElementById('input-academic-year');
+    const inputSessionDuration = document.getElementById('input-session-duration');
+    const inputLowThreshold = document.getElementById('input-low-threshold');
+    
+    const settingsForm = document.getElementById('settings-form');
+    const btnSave = document.getElementById('btn-save-settings');
+    const btnAddHall = document.getElementById('btn-add-hall');
+    const hallsListContainer = document.getElementById('halls-list-container');
+
+    let currentAdmin = null;
+    let cachedHallsList = [];
+
+    // Logout Click
+    function handleLogout() {
+      window.components.confirmDialog({
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out?',
+        confirmLabel: 'Sign Out',
+        cancelLabel: 'Cancel'
+      }).then((result) => {
+        if (result) logout();
+      });
+    }
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
+    document.getElementById('btn-logout-mobile').addEventListener('click', handleLogout);
+
+    /**
+     * Fetch settings values from DB and pre-populate inputs.
+     */
+    async function initSettingsPage() {
+      window.utils.showLoader('Loading configurations...');
+
+      try {
+        const user = await getCurrentUser();
+        if (user) {
+          currentAdmin = user;
+          adminName.textContent = user.name;
+          adminEmail.textContent = user.email;
+        }
+
+        // Fetch settings dictionary
+        const settings = await getSettings();
+        
+        // Hydrate inputs
+        inputCollegeName.value = settings.college_name || 'Harvard University';
+        inputAcademicYear.value = settings.academic_year || '2026-27';
+        inputSessionDuration.value = settings.attendance_window || '300';
+        inputLowThreshold.value = settings.low_attendance_threshold || '75';
+
+        // Update headers
+        headerCollegeName.textContent = settings.college_name || 'SmartAttend';
+        const currentYear = new Date().getFullYear();
+        document.getElementById('footer-text').textContent = `© ${currentYear} ${settings.college_name || 'SmartAttend'}. Academic Modernist Design.`;
+
+        // Render Lecture Halls list with defaults fallback
+        if (settings.lecture_halls) {
+          cachedHallsList = JSON.parse(settings.lecture_halls);
+        } else {
+          const defaults = window.APP_CONFIG?.LECTURE_HALLS || ['LH-01', 'LH-02', 'LH-03', 'LH-04', 'LH-05', 'LH-06'];
+          cachedHallsList = defaults.map(name => ({ id: name, name: name, status: 'active' }));
+        }
+        renderHallsList();
+
+        window.utils.hideLoader();
+
+      } catch (err) {
+        window.utils.hideLoader();
+        console.error('Settings load error:', err);
+        window.utils.showError('Unable to load database settings.');
+      }
+    }
+
+    // Submit form handler
+    settingsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const college = inputCollegeName.value.trim();
+      const year = inputAcademicYear.value.trim();
+      const windowVal = inputSessionDuration.value.trim();
+      const threshold = inputLowThreshold.value.trim();
+
+      if (!college || !year || !windowVal || !threshold) {
+        window.utils.showWarning('Please fill in all required settings.');
+        return;
+      }
+
+      window.utils.setLoading(btnSave, true, 'Saving changes...');
+
+      try {
+        const adminId = currentAdmin ? currentAdmin.id : null;
+
+        // Upsert keys into database settings table
+        const r1 = await api.Settings.upsert('college_name', college, adminId);
+        if (r1.error) throw r1.error;
+        const r2 = await api.Settings.upsert('academic_year', year, adminId);
+        if (r2.error) throw r2.error;
+        const r3 = await api.Settings.upsert('attendance_window', windowVal, adminId);
+        if (r3.error) throw r3.error;
+        const r4 = await api.Settings.upsert('low_attendance_threshold', threshold, adminId);
+        if (r4.error) throw r4.error;
+
+        // Clear local cache to force reload next time
+        clearSettingsCache();
+
+        window.utils.setLoading(btnSave, false);
+        window.utils.showSuccess('Settings updated successfully!');
+        
+        // Update header college name
+        headerCollegeName.textContent = college;
+
+      } catch (err) {
+        window.utils.setLoading(btnSave, false);
+        window.utils.showError(err.message || 'Failed to save settings to database.');
+      }
+    });
+
+    /**
+     * Render lecture halls inside bento widget list
+     */
+    function renderHallsList() {
+      if (cachedHallsList.length === 0) {
+        hallsListContainer.innerHTML = `
+          <div class="text-center py-6 text-on-surface-variant font-body-sm">
+            No lecture halls configured.
+          </div>
+        `;
+        return;
+      }
+
+      let hallsHtml = '';
+      cachedHallsList.forEach(hall => {
+        const isActive = hall.status === 'active';
+        hallsHtml += `
+          <div class="flex items-center justify-between p-3.5 bg-surface rounded-xl border border-outline-variant/60">
+            <div class="text-left">
+              <span class="font-label-md font-bold text-on-surface block">${hall.name}</span>
+              <span class="text-[10px] uppercase font-semibold mt-0.5 block ${isActive ? 'text-primary' : 'text-error'}">${hall.status}</span>
+            </div>
+            
+            <div class="flex items-center gap-1">
+              <!-- Rename -->
+              <button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors" onclick="renameHall('${hall.id}')" title="Rename Hall">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+              </button>
+              <!-- Disable/Enable Toggle -->
+              <button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors ${isActive ? 'text-error hover:bg-error-container/10' : 'text-primary hover:bg-primary/10'}" onclick="toggleHallStatus('${hall.id}')" title="${isActive ? 'Disable Hall' : 'Enable Hall'}">
+                <span class="material-symbols-outlined text-[16px]">${isActive ? 'block' : 'check_circle'}</span>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      hallsListContainer.innerHTML = hallsHtml;
+    }
+
+    // Save Lecture Halls JSON back to Settings DB
+    async function saveLectureHallsToDb() {
+      window.utils.showLoader('Updating lecture halls...');
+      try {
+        const adminId = currentAdmin ? currentAdmin.id : null;
+        await api.Settings.upsert('lecture_halls', JSON.stringify(cachedHallsList), adminId);
+        clearSettingsCache();
+        window.utils.hideLoader();
+        window.utils.showSuccess('Lecture halls configuration saved.');
+        renderHallsList();
+      } catch (err) {
+        window.utils.hideLoader();
+        window.utils.showError('Failed to save lecture halls.');
+      }
+    }
+
+    // Add Lecture Hall action
+    btnAddHall.addEventListener('click', () => {
+      const name = prompt('Enter name of new Lecture Hall (e.g. LH-07):');
+      if (!name) return;
+      
+      const cleanName = name.trim().toUpperCase();
+      if (!cleanName) return;
+
+      // Uniqueness check
+      const exists = cachedHallsList.some(h => h.id === cleanName || h.name === cleanName);
+      if (exists) {
+        window.utils.showError('A lecture hall with this name already exists.');
+        return;
+      }
+
+      cachedHallsList.push({
+        id: cleanName,
+        name: cleanName,
+        status: 'active'
+      });
+
+      saveLectureHallsToDb();
+    });
+
+    // Rename Lecture Hall action
+    window.renameHall = function(id) {
+      const hall = cachedHallsList.find(h => h.id === id);
+      if (!hall) return;
+
+      const newName = prompt(`Enter new name for lecture hall "${hall.name}":`, hall.name);
+      if (!newName) return;
+      
+      const cleanName = newName.trim().toUpperCase();
+      if (!cleanName || cleanName === hall.name) return;
+
+      // Uniqueness check
+      const exists = cachedHallsList.some(h => h.id !== id && (h.id === cleanName || h.name === cleanName));
+      if (exists) {
+        window.utils.showError('A lecture hall with this name already exists.');
+        return;
+      }
+
+      hall.name = cleanName;
+      // Also update ID if it matches name format
+      hall.id = cleanName;
+
+      saveLectureHallsToDb();
+    };
+
+    // Disable/Enable Lecture Hall action
+    window.toggleHallStatus = function(id) {
+      const hall = cachedHallsList.find(h => h.id === id);
+      if (!hall) return;
+
+      const isCurrentlyActive = hall.status === 'active';
+      hall.status = isCurrentlyActive ? 'disabled' : 'active';
+
+      saveLectureHallsToDb();
+    };
+
+    // Reset Students Dataset Controller
+    document.getElementById('btn-reset-students').addEventListener('click', () => {
+      window.components.confirmDialog({
+        title: 'Reset Entire Student Dataset?',
+        message: 'This action CANNOT BE UNDONE. This will permanently delete all student profiles, their attendance histories, summary calculations, and report details. Are you absolutely sure?',
+        confirmLabel: 'Reset Students',
+        confirmClass: 'destructive',
+        cancelLabel: 'Cancel'
+      }).then(async (result) => {
+        if (result) {
+          window.utils.showLoader('Resetting student database...');
+          try {
+            await resetAllStudents();
+            window.utils.hideLoader();
+            window.utils.showSuccess('All student data permanently removed.');
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.showError(err.message || 'Database reset failed.');
+          }
+        }
+      });
+    });
+
+    // Reset Faculty Dataset Controller
+    document.getElementById('btn-reset-faculty').addEventListener('click', () => {
+      window.components.confirmDialog({
+        title: 'Reset Entire Faculty Dataset?',
+        message: 'This action CANNOT BE UNDONE. This will permanently delete all faculty members (except SYSTEM_ARCHIVE) and completely remove their credentials from auth.users. Historical reports will be archived. Are you absolutely sure?',
+        confirmLabel: 'Reset Faculty',
+        confirmClass: 'destructive',
+        cancelLabel: 'Cancel'
+      }).then(async (result) => {
+        if (result) {
+          window.utils.showLoader('Resetting faculty database...');
+          try {
+            await resetAllFaculty();
+            window.utils.hideLoader();
+            window.utils.showSuccess('All faculty data permanently removed.');
+          } catch (err) {
+            window.utils.hideLoader();
+            window.utils.showError(err.message || 'Database reset failed.');
+          }
+        }
+      });
+    });
+
+    // Run
+    initSettingsPage();
+  </script>
+</body>
+</html>

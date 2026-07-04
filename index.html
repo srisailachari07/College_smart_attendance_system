@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SmartAttend | Smart Attendance System</title>
+  <meta name="description" content="SmartAttend — Choose your portal to continue."/>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <!-- Custom Shared Styles -->
+  <link rel="stylesheet" href="/css/smartattend.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary": "#3525cd",
+            "surface-container": "#eceef0",
+            "on-error": "#ffffff",
+            "tertiary-container": "#006e4b",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#c0c1ff",
+            "error": "#ba1a1a",
+            "tertiary": "#005338",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#191c1e",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#e1e0ff",
+            "on-surface-variant": "#464555",
+            "primary-fixed": "#e2dfff",
+            "surface-container-low": "#f2f4f6",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#07006c",
+            "secondary-container": "#6063ee",
+            "surface-container-highest": "#e0e3e5",
+            "secondary": "#4648d4",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "on-primary-container": "#dad7ff",
+            "outline": "#777587",
+            "surface": "#f7f9fb",
+            "primary-container": "#4f46e5",
+            "surface-dim": "#d8dadc",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#67f4b7",
+            "inverse-primary": "#c3c0ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#191c1e",
+            "background": "#f7f9fb",
+            "on-secondary-container": "#fffbff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "md": "16px",
+            "2xl": "48px",
+            "max-width": "1280px",
+            "margin-mobile": "16px",
+            "gutter": "16px",
+            "xl": "32px",
+            "margin-desktop": "32px",
+            "base": "4px",
+            "lg": "24px",
+            "sm": "8px",
+            "xs": "4px"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Geist"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-sm": ["Geist"],
+            "display-lg": ["Geist"],
+            "label-md": ["Geist"],
+            "body-md": ["Inter"],
+            "headline-md": ["Geist"],
+            "headline-lg": ["Geist"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+
+  <main class="flex-grow relative overflow-hidden flex items-center justify-center">
+    <!-- Background gradient accent -->
+    <div class="absolute inset-0 -z-10" style="background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(53,37,205,0.06) 0%, transparent 70%);"></div>
+
+    <div class="max-w-max-width w-full mx-auto px-margin-mobile md:px-margin-desktop py-xl lg:py-2xl">
+
+      <!-- Branding -->
+      <div class="text-center mb-xl lg:mb-2xl">
+        <div class="inline-flex items-center gap-3 mb-6">
+          <span class="material-symbols-outlined text-primary" style="font-size: 48px;">school</span>
+          <h1 class="font-display-lg text-display-lg text-on-surface" id="header-college-name">SmartAttend</h1>
+        </div>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">Choose your portal to continue.</p>
+      </div>
+
+      <!-- Portal Selector Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter max-w-2xl mx-auto">
+
+        <!-- Student Portal Card -->
+        <div class="group relative bg-surface-container-lowest rounded-[24px] p-8 border border-outline-variant soft-bloom transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden" onclick="window.location.href='/student/index.html'" id="btn-student-portal">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-8 w-14 h-14 rounded-2xl indigo-gradient flex items-center justify-center text-white shadow-lg">
+            <span class="material-symbols-outlined" style="font-size: 28px;">how_to_reg</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Student Portal</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Mark attendance for your lecture slot using your Student ID and attendance code.</p>
+          <div class="flex items-center gap-2 text-primary font-bold group-hover:gap-4 transition-all">
+            <span>Enter Student Portal</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </div>
+        </div>
+
+        <!-- Staff Portal Card -->
+        <div class="group relative bg-surface-container-lowest rounded-[24px] p-8 border border-outline-variant soft-bloom transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden" onclick="window.location.href='/staff/index.html'" id="btn-staff-portal">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-tertiary-container/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-8 w-14 h-14 rounded-2xl bg-inverse-surface flex items-center justify-center text-white shadow-lg">
+            <span class="material-symbols-outlined" style="font-size: 28px;">manage_accounts</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Staff Portal</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Faculty and Administrator login for session management, reports, and system configuration.</p>
+          <div class="flex items-center gap-2 text-on-surface font-bold group-hover:gap-4 transition-all">
+            <span>Enter Staff Portal</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full py-6 px-margin-mobile md:px-margin-desktop flex justify-center bg-surface-container-lowest border-t border-surface-variant">
+    <p class="font-body-sm text-body-sm text-on-surface-variant" id="footer-text">© 2026 College Smart Attendance System.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script type="module">
+    import { getSetting } from '/js/utils.js';
+
+    async function loadSettings() {
+      try {
+        const collegeName = await getSetting('college_name');
+        if (collegeName) {
+          document.getElementById('header-college-name').textContent = collegeName;
+          const currentYear = new Date().getFullYear();
+          document.getElementById('footer-text').textContent = `© ${currentYear} ${collegeName}.`;
+        }
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+    loadSettings();
+  </script>
+</body>
+</html>

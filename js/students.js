@@ -18,9 +18,9 @@ import { ensureSummaryRow } from './summary.js';
  * @param {{ name: string, mobile: string, hall: string, rollNumber?: string }} data
  * @returns {Promise<object>} Generated student record from DB
  */
-export async function createStudent({ name, mobile, hall, rollNumber } = {}) {
+export async function createStudent({ name, mobile = null, hall, rollNumber } = {}) {
   try {
-    const cleanedMobile = mobile.trim();
+    const cleanedMobile = mobile ? mobile.trim() : null;
     
     // 1. Call API create (which calls register_student RPC)
     const { data: student, error } = await api.Students.create({
@@ -64,7 +64,7 @@ export async function updateStudent(id, updates = {}) {
       if (val !== original.student_name) changedFields.push('student_name');
     }
     if (updates.mobile_number !== undefined) {
-      const val = updates.mobile_number.trim();
+      const val = updates.mobile_number ? updates.mobile_number.trim() : null;
       cleanedUpdates.mobile_number = val;
       if (val !== original.mobile_number) changedFields.push('mobile_number');
     }

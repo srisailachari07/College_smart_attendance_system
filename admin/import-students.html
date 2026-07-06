@@ -173,7 +173,6 @@
               <p class="font-bold text-primary">Required Columns:</p>
               <p>• University Roll Number * (Mandatory, Unique)</p>
               <p>• Student Name * (Mandatory)</p>
-              <p>• Registered Mobile Number * (Mandatory, Unique)</p>
               <p>• Lecture Hall * (Mandatory, e.g. LH-01)</p>
             </div>
           </div>
@@ -212,7 +211,7 @@
               <span class="text-xs text-on-surface-variant font-label-md">Invalid Rows</span>
               <span class="text-sm font-bold text-error" id="count-invalid">0</span>
             </div>
-            <div class="bg-surface px-3 py-1.5 rounded-full border border-outline-variant flex items-center gap-1.5">
+            <div class="bg-surface px-3 py-1.5 rounded-full border border-outline-variant flex items-center gap-1.5 hidden">
               <span class="text-xs text-on-surface-variant font-label-md">Duplicate Mobiles</span>
               <span class="text-sm font-bold text-orange-500" id="count-dup-mobiles">0</span>
             </div>
@@ -237,7 +236,6 @@
                   <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Row</th>
                   <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Roll Number</th>
                   <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Student Name</th>
-                  <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Mobile Number</th>
                   <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Lecture Hall</th>
                   <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
                   <th class="p-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Validation Notes</th>
@@ -512,8 +510,8 @@
       const mobileIdx = headerRow.indexOf('registered mobile number');
       const hallIdx = headerRow.indexOf('lecture hall');
 
-      if (rollIdx === -1 || nameIdx === -1 || mobileIdx === -1 || hallIdx === -1) {
-        window.utils.showError("Required headers missing. Roster headers must precisely match: 'University Roll Number', 'Student Name', 'Registered Mobile Number', and 'Lecture Hall'.");
+      if (rollIdx === -1 || nameIdx === -1 || hallIdx === -1) {
+        window.utils.showError("Required headers missing. Roster headers must precisely match: 'University Roll Number', 'Student Name', and 'Lecture Hall'.");
         return;
       }
 
@@ -533,7 +531,7 @@
 
         const roll = String(row[rollIdx] || '').trim();
         const name = String(row[nameIdx] || '').trim();
-        const mobile = String(row[mobileIdx] || '').trim();
+        const mobile = mobileIdx !== -1 ? String(row[mobileIdx] || '').trim() : '';
         const hall = String(row[hallIdx] || '').trim().toUpperCase();
 
         const record = {
@@ -571,7 +569,6 @@
         // 1. Missing mandatory field checks
         if (!row.roll) row.errors.push('University Roll Number is missing.');
         if (!row.name) row.errors.push('Student Name is missing.');
-        if (!row.mobile) row.errors.push('Registered Mobile Number is missing.');
         if (!row.hall) row.errors.push('Lecture Hall is missing.');
 
         // 2. Format checks
@@ -627,7 +624,7 @@
           validRowsForImport.push({
             roll_number: row.roll,
             student_name: row.name,
-            mobile_number: row.mobile,
+            mobile_number: row.mobile || null,
             lecture_hall: row.hall
           });
         }
@@ -676,7 +673,6 @@
             <td class="p-3 font-semibold text-on-surface-variant">${row.rowNum}</td>
             <td class="p-3 font-mono font-medium">${row.roll || '—'}</td>
             <td class="p-3 font-medium">${row.name || '—'}</td>
-            <td class="p-3">${row.mobile || '—'}</td>
             <td class="p-3 font-semibold">${row.hall || '—'}</td>
             <td class="p-3">${badge}</td>
             <td class="p-3 text-xs">${notes}</td>
@@ -783,9 +779,9 @@
 
     // Download CSV template file generator
     document.getElementById('btn-download-csv').addEventListener('click', () => {
-      const csvContent = "University Roll Number,Student Name,Registered Mobile Number,Lecture Hall\n" +
-                         "23CS001,Rahul Kumar,9876543210,LH-01\n" +
-                         "23CS002,Priya Sharma,9123456789,LH-02\n";
+      const csvContent = "University Roll Number,Student Name,Lecture Hall\n" +
+                         "23CS001,Rahul Kumar,LH-01\n" +
+                         "23CS002,Priya Sharma,LH-02\n";
       
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
@@ -798,10 +794,10 @@
 
     // Download XLSX template file generator via SheetJS
     document.getElementById('btn-download-xlsx').addEventListener('click', () => {
-      const headers = ['University Roll Number', 'Student Name', 'Registered Mobile Number', 'Lecture Hall'];
+      const headers = ['University Roll Number', 'Student Name', 'Lecture Hall'];
       const data = [
-        ['23CS001', 'Rahul Kumar', '9876543210', 'LH-01'],
-        ['23CS002', 'Priya Sharma', '9123456789', 'LH-02']
+        ['23CS001', 'Rahul Kumar', 'LH-01'],
+        ['23CS002', 'Priya Sharma', 'LH-02']
       ];
       
       const wb = XLSX.utils.book_new();
@@ -814,9 +810,9 @@
     btnDownloadErrors.addEventListener('click', () => {
       if (failedImportReports.length === 0) return;
 
-      let csv = 'Row Number,University Roll Number,Student Name,Mobile Number,Lecture Hall,Failure Reason\n';
+      let csv = 'Row Number,University Roll Number,Student Name,Lecture Hall,Failure Reason\n';
       failedImportReports.forEach(row => {
-        csv += `"${row.rowNum}","${row.roll || ''}","${(row.name || '').replace(/"/g, '""')}","${row.mobile || ''}","${row.hall || ''}","${(row.reason || '').replace(/"/g, '""')}"\n`;
+        csv += `"${row.rowNum}","${row.roll || ''}","${(row.name || '').replace(/"/g, '""')}","${row.hall || ''}","${(row.reason || '').replace(/"/g, '""')}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

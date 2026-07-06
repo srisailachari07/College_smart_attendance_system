@@ -216,7 +216,7 @@
           <!-- Search -->
           <div class="relative flex-grow">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-            <input class="w-full h-11 pl-10 pr-4 bg-surface rounded-full border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm transition-all" id="input-search" placeholder="Search by name, ID, mobile, roll..."/>
+            <input class="w-full h-11 pl-10 pr-4 bg-surface rounded-full border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm transition-all" id="input-search" placeholder="Search by name, ID, roll..."/>
           </div>
           <!-- Hall Filter -->
           <select class="h-11 px-4 bg-surface rounded-full border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm appearance-none pr-10 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E')] bg-[length:0.65rem_auto] bg-[right_1rem_center] bg-no-repeat" id="select-hall-filter">
@@ -255,7 +255,6 @@
                 <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Student Name</th>
                 <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Student ID</th>
                 <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Roll Number</th>
-                <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Mobile Number</th>
                 <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Lecture Hall</th>
                 <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
                 <th class="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
@@ -298,10 +297,10 @@
             <span class="text-xs text-error hidden" id="modal-err-name">Invalid format (2-100 chars, letters/spaces only).</span>
           </div>
           
-          <!-- Mobile -->
-          <div class="flex flex-col gap-1">
-            <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="modal-mobile">Mobile Number *</label>
-            <input class="w-full h-11 px-3 bg-surface-bright border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="modal-mobile" required placeholder="10-digit mobile number" maxlength="10"/>
+          <!-- Mobile (Hidden) -->
+          <div class="flex flex-col gap-1 hidden">
+            <label class="font-label-md text-label-md text-on-surface-variant pl-1" for="modal-mobile">Mobile Number</label>
+            <input class="w-full h-11 px-3 bg-surface-bright border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-sm" id="modal-mobile" placeholder="10-digit mobile number" maxlength="10"/>
             <span class="text-xs text-error hidden" id="modal-err-mobile">Exactly 10 digits starting with 6-9.</span>
             <span class="text-xs text-error hidden" id="modal-err-mobile-dup">This number is already in use.</span>
           </div>
@@ -565,7 +564,6 @@
               <td class="p-4 text-body-sm font-semibold text-on-surface">${std.student_name}</td>
               <td class="p-4 text-body-sm text-primary font-mono">${std.student_id}</td>
               <td class="p-4 text-body-sm text-on-surface-variant font-mono">${std.roll_number || '—'}</td>
-              <td class="p-4 text-body-sm text-on-surface-variant">${std.mobile_number}</td>
               <td class="p-4 text-body-sm text-on-surface-variant font-bold">${std.lecture_hall}</td>
               <td class="p-4 text-body-sm">${statusBadge}</td>
               <td class="p-4 text-body-sm text-right space-x-2">

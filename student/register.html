@@ -155,18 +155,20 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
-            <!-- Mobile Field -->
-            <div class="space-y-base">
-              <label class="font-label-md text-label-md text-on-surface-variant block" for="mobile-number">Mobile Number *</label>
-              <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="mobile-number" placeholder="10-digit mobile number" required type="tel" maxlength="10"/>
+            <!-- Mobile Field (Hidden) -->
+            <div class="space-y-base hidden">
+              <label class="font-label-md text-label-md text-on-surface-variant block" for="mobile-number">Mobile Number</label>
+              <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="mobile-number" placeholder="10-digit mobile number" type="tel" maxlength="10"/>
               <span class="text-xs text-error hidden" id="error-mobile">Invalid format. Exactly 10 digits starting with 6-9.</span>
               <span class="text-xs text-error hidden" id="error-mobile-duplicate">This mobile number is already registered. Please use Student Login.</span>
             </div>
             
-            <!-- Roll Number Field (R6 Optional) -->
+            <!-- Roll Number Field (Mandatory) -->
             <div class="space-y-base">
-              <label class="font-label-md text-label-md text-on-surface-variant block" for="roll-number">University Roll Number (Optional)</label>
-              <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="roll-number" placeholder="e.g. 2026CS1042" type="text"/>
+              <label class="font-label-md text-label-md text-on-surface-variant block" for="roll-number">University Roll Number *</label>
+              <input class="w-full h-[48px] px-md rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-body-md" id="roll-number" placeholder="e.g. 23CS001" required type="text"/>
+              <span class="text-xs text-error hidden" id="error-roll">University Roll Number is mandatory.</span>
+              <span class="text-xs text-error hidden" id="error-roll-duplicate">This Roll Number is already registered.</span>
             </div>
           </div>
 
@@ -261,6 +263,8 @@
     const errorMobile = document.getElementById('error-mobile');
     const errorMobileDuplicate = document.getElementById('error-mobile-duplicate');
     const errorHall = document.getElementById('error-hall');
+    const errorRoll = document.getElementById('error-roll');
+    const errorRollDuplicate = document.getElementById('error-roll-duplicate');
 
     let redirectTimer = null;
 
@@ -335,15 +339,14 @@
       
       // Clear errors
       errorName.classList.add('hidden');
-      errorMobile.classList.add('hidden');
-      errorMobileDuplicate.classList.add('hidden');
       errorHall.classList.add('hidden');
+      errorRoll.classList.add('hidden');
+      errorRollDuplicate.classList.add('hidden');
 
       let hasErrors = false;
 
       // Validate inputs
       const name = nameInput.value.trim();
-      const mobile = mobileInput.value.trim();
       const hall = hallSelect.value;
       const rollNumber = rollInput.value.trim();
 
@@ -352,8 +355,8 @@
         hasErrors = true;
       }
 
-      if (!isValidMobile(mobile)) {
-        errorMobile.classList.remove('hidden');
+      if (!rollNumber) {
+        errorRoll.classList.remove('hidden');
         hasErrors = true;
       }
 
@@ -367,19 +370,18 @@
       try {
         window.utils.showLoader('Registering student...');
         
-        // Final duplicate check immediately before creation
-        const isDuplicate = await checkMobileDuplicate(mobile);
-        if (isDuplicate) {
+        // Check duplicate roll number
+        const { data: existingStudent } = await api.Students.findByRollNumber(rollNumber);
+        if (existingStudent) {
           window.utils.hideLoader();
-          errorMobileDuplicate.classList.remove('hidden');
-          mobileInput.focus();
+          errorRollDuplicate.classList.remove('hidden');
+          rollInput.focus();
           return;
         }
 
         // Create the student
         const student = await createStudent({
           name,
-          mobile,
           hall,
           rollNumber
         });
@@ -404,7 +406,7 @@
             countdownEl.textContent = seconds;
             if (seconds <= 0) {
               clearInterval(redirectTimer);
-              window.location.href = `/student/attendance.html?mobile=${mobile}`;
+              window.location.href = `/student/attendance.html?roll=${rollNumber}`;
             }
           }, 1000);
         }, 300);
@@ -421,14 +423,13 @@
       successCard.classList.add('hidden');
       regCard.classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
       form.reset();
-      mobileInput.classList.remove('border-error');
     });
 
     // Proceed to Attendance
     proceedBtn.addEventListener('click', () => {
       clearInterval(redirectTimer);
-      const mobile = mobileInput.value.trim();
-      window.location.href = `/student/attendance.html?mobile=${mobile}`;
+      const rollNumber = rollInput.value.trim();
+      window.location.href = `/student/attendance.html?roll=${rollNumber}`;
     });
 
     // Simple interaction micro-animations

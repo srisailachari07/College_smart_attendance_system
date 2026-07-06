@@ -510,6 +510,12 @@
       const mobileIdx = headerRow.indexOf('registered mobile number');
       const hallIdx = headerRow.indexOf('lecture hall');
 
+      const hasMobileColumn = headerRow.some(h => h.includes('mobile'));
+      if (hasMobileColumn) {
+        window.utils.showError("Import failed: Mobile numbers are no longer supported. Please download the updated template and remove any Mobile Number column before importing.");
+        return;
+      }
+
       if (rollIdx === -1 || nameIdx === -1 || hallIdx === -1) {
         window.utils.showError("Required headers missing. Roster headers must precisely match: 'University Roll Number', 'Student Name', and 'Lecture Hall'.");
         return;
